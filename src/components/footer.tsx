@@ -84,9 +84,9 @@ function Footer() {
                   href={"tel:+919850326555"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex  gap-2 md:text-xl text-neutral-700 hover:text-black"
+                  className="flex body gap-2 md:text-xl text-neutral-700 hover:text-black"
                 >
-                  <Phone className=" mt-1.5" /> +91-9850326555
+                  <Phone className=" mt-0.5" /> +91-9850326555
                 </Link>
                 <Link
                   href={"mailto:furdeconstructions@gmail.com"}
