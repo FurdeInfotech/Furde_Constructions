@@ -108,7 +108,7 @@ function Footer() {
                 </Link>
               </div>
             </div>
-            <div className=" w-full border-t px-10 py-4 md:flex-row flex-col flex justify-between md:items-center  gap-2">
+            <div className=" w-full border-t px-10 py-4 md:flex-row flex-col flex justify-center md:items-center  gap-2">
               <p className="  text-neutral-700">
                 <span className=" secondary-text">&copy; {year}</span>{" "}
                 <span className=" text-black heading font-semibold">
@@ -116,12 +116,12 @@ function Footer() {
                 </span>{" "}
                 All Rights Reserved.
               </p>
-              <p className=" text-neutral-700">
+              {/* <p className=" text-neutral-700">
                 Designed by{" "}
                 <span className=" text-black heading font-semibold">
                   Yash Thakur
                 </span>
-              </p>
+              </p> */}
             </div>
           </motion.div>
         </div>
