@@ -132,10 +132,10 @@ export default function Home() {
           />
         </motion.div>
       </div>
-      <div className="flex md:flex-row md:gap-0 gap-10 flex-col items-center md:px-8 px-5 md:py-10 py-5">
+      <div className="flex md:flex-row md:gap-5 gap-10 flex-col items-center md:px-8 px-5 md:py-10 py-5">
         <div className="heading space-y-7 md:w-1/2">
           <h2 className="md:text-3xl text-xl font-bold">Our Story</h2>
-          <h3 className="md:text-5xl text-3xl font-semibold">Built on Trust, Driven by Precision</h3>
+          <h3 className="md:text-5xl text-3xl font-semibold leading-snug">Built on Trust, Driven by Precision</h3>
         </div>
         <div className="md:w-1/2">
           <p className="secondary-text md:text-xl text-base">

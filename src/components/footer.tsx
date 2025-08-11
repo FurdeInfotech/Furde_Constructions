@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
@@ -81,12 +81,12 @@ function Footer() {
 
               <div className="py-2 px-5 grid grid-cols-1 font-semibold heading md:space-y-0 space-y-4">
                 <Link
-                  href={"tel:+919876543210"}
+                  href={"tel:+919850326555"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex  gap-2 md:text-xl text-neutral-700 hover:text-black"
                 >
-                  <Phone className=" mt-1.5" /> +91-9876543210
+                  <Phone className=" mt-1.5" /> +91-9850326555
                 </Link>
                 <Link
                   href={"mailto:furdeconstructions@gmail.com"}
