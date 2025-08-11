@@ -122,7 +122,7 @@ export default function Home() {
           className="relative md:w-[55%] w-full h-[300px] md:h-auto"
         >
           <Image
-            src="/hero.png"
+            src="/her.jpeg"
             alt="Hero Image"
             fill
             className="object-cover [object-position:60%_center] rounded-4xl"
