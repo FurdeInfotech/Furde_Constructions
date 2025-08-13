@@ -14,7 +14,7 @@ function Navbar() {
 
     {
       name: "Our Story",
-      link: "/story",
+      link: "/our-story",
     
     },
     {

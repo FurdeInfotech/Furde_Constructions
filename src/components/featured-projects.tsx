@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { ArrowRight, MapPin } from "lucide-react";
 import { Badge } from "./ui/badge";
-import { AnimatedArrowButton } from "./ui/animated-button";
+import  AnimatedArrowButton  from "./ui/animated-button";
 
 export default function FeaturedProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -80,7 +80,7 @@ export default function FeaturedProjects() {
         Discover some of our projects
       </p>
 
-      <div ref={containerRef} className="relative h-[500vh]">
+      <div ref={containerRef} className="relative h-[400vh] md:mt-5 mt-0">
         {/* Card 1 */}
         <motion.div
           className="sticky top-16 h-screen flex items-center justify-center md:px-10 px-5"
@@ -91,7 +91,7 @@ export default function FeaturedProjects() {
             zIndex: card1Z,
           }}
         >
-          <Card className="w-full max-w-7xl h-[40rem] shadow-2xl border-0 rounded-3xl relative overflow-hidden">
+          <Card className="w-full md:max-w-8xl md:h-[50rem] max-w-full h-[40rem] shadow-2xl border-0 rounded-3xl relative overflow-hidden">
             <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-black/10" />
             <div className="absolute inset-0">
               <Image
@@ -138,7 +138,7 @@ export default function FeaturedProjects() {
             zIndex: card2Z,
           }}
         >
-          <Card className="w-full max-w-7xl h-[40rem] shadow-2xl border-0 rounded-3xl relative">
+          <Card className="w-full md:max-w-8xl md:h-[50rem] max-w-full h-[40rem] shadow-2xl border-0 rounded-3xl relative">
             <div className="absolute inset-0">
               <Image
                 src="/front.png"
@@ -184,7 +184,7 @@ export default function FeaturedProjects() {
             zIndex: card3Z,
           }}
         >
-          <Card className="w-full max-w-7xl h-[40rem] shadow-2xl border-0 rounded-3xl relative p-0">
+          <Card className="w-full md:max-w-8xl md:h-[50rem] max-w-full h-[40rem] shadow-2xl border-0 rounded-3xl relative p-0">
             <div className="absolute inset-0">
               <Image
                 src="/front.png"

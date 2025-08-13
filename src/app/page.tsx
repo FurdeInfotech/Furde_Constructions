@@ -1,41 +1,42 @@
-"use client"
-import { NumberTicker } from "@/components/magicui/number-ticker"
-import type React from "react"
-import { Button } from "@/components/ui/button"
-import { Play } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { AnimatedArrowButton } from "@/components/ui/animated-button"
-import WhyChooseUs from "@/components/why-choose-us"
-import { useState, useEffect } from "react"
-import Video from "next-video"
-import furdeVideo from "../../videos/Furde Constructions.mp4"
-import FeaturedProjects from "@/components/featured-projects"
+"use client";
+import { NumberTicker } from "@/components/magicui/number-ticker";
+import type React from "react";
+import { Button } from "@/components/ui/button";
+import { Play } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import  AnimatedArrowButton  from "@/components/ui/animated-button";
+import WhyChooseUs from "@/components/why-choose-us";
+import { useState, useEffect } from "react";
+import Video from "next-video";
+import furdeVideo from "../../videos/Furde Constructions.mp4";
+import FeaturedProjects from "@/components/featured-projects";
+import ContactUsForm from "@/components/contact-us-form";
 
 export default function Home() {
-  const [videoPlayer, setVideoPlayer] = useState(false)
+  const [videoPlayer, setVideoPlayer] = useState(false);
 
   useEffect(() => {
     return () => {
-      document.body.style.overflow = "auto"
-    }
-  }, [])
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const handleVideoPlayer = () => {
-    setVideoPlayer(!videoPlayer)
+    setVideoPlayer(!videoPlayer);
     if (!videoPlayer) {
-      document.body.style.overflow = "hidden"
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto"
+      document.body.style.overflow = "auto";
     }
-  }
+  };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
-      handleVideoPlayer()
+      handleVideoPlayer();
     }
-  }
+  };
 
   return (
     <>
@@ -51,7 +52,13 @@ export default function Home() {
             className="absolute top-4 right-4 z-20 bg-white/90 hover:bg-white text-black cursor-pointer rounded-full p-3 transition-colors"
             aria-label="Close video"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 d="M18 6L6 18M6 6L18 18"
                 stroke="currentColor"
@@ -92,9 +99,12 @@ export default function Home() {
             Expertise that Inspires Confidence. Buildings that Instill Pride.
           </h1>
           <p className="secondary-text mt-5 md:text-xl text-base">
-            We have delivered projects that provide lasting values to the investors and communities.
+            We have delivered projects that provide lasting values to the
+            investors and communities.
           </p>
-          <AnimatedArrowButton className="md:mt-20 mt-10 bg-white">View Projects</AnimatedArrowButton>
+          <AnimatedArrowButton className="md:mt-20 mt-10 bg-white">
+            View Projects
+          </AnimatedArrowButton>
 
           <div className="flex justify-between items-center md:mt-20 mt-10">
             <p className="heading text-4xl font-bold">
@@ -105,10 +115,17 @@ export default function Home() {
                 delay={0.4}
                 className="whitespace-pre-wrap tracking-tighter text-black dark:text-white"
               />
-              + <span className="md:text-3xl text-2xl font-normal">Years of Experience</span>
+              +{" "}
+              <span className="md:text-3xl text-2xl font-normal">
+                Years of Experience
+              </span>
             </p>
 
-            <motion.div layoutId="video-player" onClick={() => handleVideoPlayer()} className="cursor-pointer z-20">
+            <motion.div
+              layoutId="video-player"
+              onClick={() => handleVideoPlayer()}
+              className="cursor-pointer z-20"
+            >
               <Button className="text-base w-fit bg-[url('/video.jpg')] bg-cover bg-center">
                 Watch <Play />
               </Button>
@@ -133,26 +150,34 @@ export default function Home() {
           />
         </motion.div>
       </div>
-      <div className="flex md:flex-row md:gap-4 gap-10 flex-col items-center md:px-8 px-5 md:py-10 py-5">
+      <div className="flex md:flex-row md:gap-4 gap-10 flex-col items-center md:px-10 px-5 md:py-10 py-5">
         <div className="heading space-y-7 md:w-1/2">
           <h2 className="section-heading">Our Story</h2>
-          <h3 className="md:text-5xl text-3xl font-semibold leading-snug">Built on Trust, Driven by Precision</h3>
+          <h3 className="md:text-5xl text-3xl font-semibold leading-snug">
+            Built on Trust, Driven by Precision
+          </h3>
         </div>
         <div className="md:w-1/2">
           <p className="secondary-text md:text-xl text-base">
-            Furde Constructions, established in 1989, is a recognized name in the Solapur regions real estate sector.
-            With over 25 completed projects, the firm maintains a strong presence in residential development. Its focus
-            is on delivering high-quality housing solutions designed to enhance urban living. The company aims to exceed
-            industry standards through consistent execution and community-centric planning.
+            Furde Constructions, established in 1989, is a recognized name in
+            the Solapur regions real estate sector. With over 25 completed
+            projects, the firm maintains a strong presence in residential
+            development. Its focus is on delivering high-quality housing
+            solutions designed to enhance urban living. The company aims to
+            exceed industry standards through consistent execution and
+            community-centric planning.
           </p>
           <Link href={`/our-story`}>
-            <AnimatedArrowButton className="text-base mt-5 bg-white">Our Story</AnimatedArrowButton>
+            <AnimatedArrowButton className="text-base mt-5 bg-white">
+              Our Story
+            </AnimatedArrowButton>
           </Link>
         </div>
       </div>
-      
+
       <WhyChooseUs />
-      <FeaturedProjects/>
+      <FeaturedProjects />
+      <ContactUsForm />
     </>
-  )
+  );
 }

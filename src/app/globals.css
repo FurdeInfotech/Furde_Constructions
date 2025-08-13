@@ -115,10 +115,11 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+      font-family: var(--font-roboto);
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#faf9f6] text-foreground;
   }
 }
 
@@ -147,7 +148,8 @@
 }
 
 .secondary-text {
-  @apply text-[#4E4E4E]
+  @apply text-[#4E4E4E];
+   font-family: var(--font-roboto);
 }
 
 .primary-text {
