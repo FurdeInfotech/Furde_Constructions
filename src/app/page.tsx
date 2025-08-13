@@ -85,7 +85,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 100, x: 100 }}
           animate={{ opacity: 1, y: 0, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg md:w-[45%] h-[80vh] md:h-auto flex flex-col justify-center px-6 rounded-4xl"
+          className="bg md:w-[50%] h-[80vh] md:h-auto flex flex-col justify-center px-6 rounded-4xl"
         >
           <h1 className="heading font-semibold md:text-5xl text-3xl leading-snug md:mt-0 mt-5">
             Expertise that Inspires Confidence. Buildings that Instill Pride.
@@ -119,7 +119,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 100, x: -100 }}
           animate={{ opacity: 1, y: 0, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative md:w-[55%] w-full h-[300px] md:h-auto"
+          className="relative md:w-[50%] w-full h-[300px] md:h-auto"
         >
           <Image
             src="/hero.png"
@@ -132,7 +132,7 @@ export default function Home() {
           />
         </motion.div>
       </div>
-      <div className="flex md:flex-row md:gap-5 gap-10 flex-col items-center md:px-8 px-5 md:py-10 py-5">
+      <div className="flex md:flex-row md:gap-4 gap-10 flex-col items-center md:px-8 px-5 md:py-10 py-5">
         <div className="heading space-y-7 md:w-1/2">
           <h2 className="md:text-3xl text-xl font-bold">Our Story</h2>
           <h3 className="md:text-5xl text-3xl font-semibold leading-snug">Built on Trust, Driven by Precision</h3>
