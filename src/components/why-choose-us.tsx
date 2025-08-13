@@ -7,7 +7,7 @@ function WhyChooseUs() {
   return (
     <div className=" relative w-full md:h-[100vh] h-screen mt-5 rounded-4xl overflow-hidden ">
       <div className="absolute flex justify-center flex-col space-y-5 h-full w-full inset-0 bg-black/55 backdrop-blur-sm z-10 md:px-10 px-5">
-        <h1 className=" font-bold md:text-2xl  text-lg text-white leading-snug heading mt-16">
+        <h1 className=" section-heading text-white  mt-16">
           Why Choose Us?
         </h1>
         <h2 className=" md:text-5xl text-3xl text-white mt-5">

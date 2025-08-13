@@ -11,6 +11,7 @@ import WhyChooseUs from "@/components/why-choose-us"
 import { useState, useEffect } from "react"
 import Video from "next-video"
 import furdeVideo from "../../videos/Furde Constructions.mp4"
+import FeaturedProjects from "@/components/featured-projects"
 
 export default function Home() {
   const [videoPlayer, setVideoPlayer] = useState(false)
@@ -134,7 +135,7 @@ export default function Home() {
       </div>
       <div className="flex md:flex-row md:gap-4 gap-10 flex-col items-center md:px-8 px-5 md:py-10 py-5">
         <div className="heading space-y-7 md:w-1/2">
-          <h2 className="md:text-3xl text-xl font-bold">Our Story</h2>
+          <h2 className="section-heading">Our Story</h2>
           <h3 className="md:text-5xl text-3xl font-semibold leading-snug">Built on Trust, Driven by Precision</h3>
         </div>
         <div className="md:w-1/2">
@@ -149,7 +150,9 @@ export default function Home() {
           </Link>
         </div>
       </div>
+      
       <WhyChooseUs />
+      <FeaturedProjects/>
     </>
   )
 }

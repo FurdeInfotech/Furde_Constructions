@@ -161,3 +161,7 @@
 .btn {
   @apply bg-[#CA6F1E] hover:bg-[#CA6F1E]/90 text-white rounded-full;
 }
+.section-heading{
+  @apply md:text-3xl text-xl font-bold leading-snug;
+  font-family: var(--font-raleway);
+}
