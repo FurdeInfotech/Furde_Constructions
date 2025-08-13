@@ -101,7 +101,7 @@ export default function FeaturedProjects() {
                 className="object-cover rounded-3xl"
               />
             </div>
-            <div className="absolute md:top-1/2 md:-translate-y-1/2 md:right-16 bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
+            <div className="absolute  md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:left-auto md:right-16 md:translate-x-0  bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
               <div className="mb-3">
                 <Badge variant={"onGoing"}>Ongoing</Badge>
               </div>
@@ -147,7 +147,7 @@ export default function FeaturedProjects() {
                 className="object-cover rounded-3xl"
               />
             </div>
-            <div className="absolute md:top-1/2 md:-translate-y-1/2 md:right-16 bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
+            <div className="absolute  md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:left-auto md:right-16 md:translate-x-0  bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
               <div className="mb-3">
                 <Badge variant={"completed"}>Completed</Badge>
               </div>
@@ -193,7 +193,7 @@ export default function FeaturedProjects() {
                 className="object-cover rounded-3xl"
               />
             </div>
-            <div className="absolute md:top-1/2 md:-translate-y-1/2 md:right-16 bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
+            <div className="absolute  md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:left-auto md:right-16 md:translate-x-0  bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
               <div className="mb-3">
                 <Badge variant={"completed"}>Completed</Badge>
               </div>
