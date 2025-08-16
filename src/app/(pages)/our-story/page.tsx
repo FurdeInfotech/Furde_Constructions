@@ -1,3 +1,5 @@
+import MileStone from "@/components/mile-stone";
+import SteeringOurMission from "@/components/steering-our-mission";
 import { Card } from "@/components/ui/apple-cards-carousel";
 import { div } from "framer-motion/client";
 import Image from "next/image";
@@ -63,6 +65,10 @@ function page() {
           ))}
         </div>
       </div>
+
+
+    <MileStone/>
+    <SteeringOurMission/>
     </div>
   );
 }
