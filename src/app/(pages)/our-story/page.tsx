@@ -81,7 +81,7 @@ interface FeatureCardProps {
   description: string;
 }
 
-export function FeatureCard({ image, title, description }: FeatureCardProps) {
+function FeatureCard({ image, title, description }: FeatureCardProps) {
   return (
     <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 overflow-hidden">
       <div className="aspect-video relative rounded-t-lg overflow-hidden">
