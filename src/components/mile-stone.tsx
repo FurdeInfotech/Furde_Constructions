@@ -49,9 +49,9 @@ function MileStone() {
 
   return (
     <div className="relative w-full h-[80vh] mt-5 rounded-4xl overflow-hidden">
-      <div className="absolute flex justify-center items-start flex-col space-y-5 h-full w-full inset-0 md:bg-black/40 bg-black/40  backdrop-blur-lg z-10 md:px-8 px-6">
+      <div className="absolute flex justify-center items-start flex-col space-y-5 h-full w-full inset-0 md:bg-black/40 bg-black/40  backdrop-blur-lg z-10 md:px-8 px-6 py-5">
         <h1 className=" section-heading text-white">Building MileStones</h1>
-        <p className="md:mt-5 md:text-xl text-base text-white  w-full">
+        <p className="md:mt-0 md:text-xl text-base text-white  w-full">
           Three decades of trust, innovation, and unwavering commitment—each
           milestone reflects our dedication to transforming visions into
           enduring structures.
