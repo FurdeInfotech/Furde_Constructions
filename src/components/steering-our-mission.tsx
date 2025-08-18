@@ -13,7 +13,7 @@ function SteeringOurMission() {
         </p>
       </div>
       <div className="flex sm:flex-row flex-col justify-between items-center gap-8 md:pt-12 ">
-        <div className="sm:w-[15%] w-full">
+        <div className="sm:w-[20%] w-full">
           <div className="aspect-[3/4] sm:h-[500px] relative overflow-hidden rounded-lg cardShadow">
             <Image
               src="/sunil_furde.jpg"
@@ -23,7 +23,7 @@ function SteeringOurMission() {
             />
           </div>
         </div>
-        <div className="sm:w-[75%] w-full">
+        <div className="sm:w-[70%] w-full">
           <h2 className="font-semibold text-3xl text-[#4E4E4E] heading">
             Founder
           </h2>
@@ -45,7 +45,7 @@ function SteeringOurMission() {
       </div>
 
       <div className="flex sm:flex-row flex-col justify-between items-center gap-8">
-        <div className="sm:w-[15%] w-full">
+        <div className="sm:w-[20%] w-full">
           <div className="aspect-[3/4]  sm:h-[500px] relative overflow-hidden rounded-lg cardShadow">
             <Image
               src="/rohit_furde.jpg"
@@ -55,7 +55,7 @@ function SteeringOurMission() {
             />
           </div>
         </div>
-        <div className="sm:w-[75%] w-full">
+        <div className="sm:w-[70%] w-full">
           <h2 className="font-semibold text-3xl text-[#4E4E4E] heading">
             Executive Director
           </h2>
