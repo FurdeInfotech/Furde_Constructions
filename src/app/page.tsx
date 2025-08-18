@@ -116,7 +116,7 @@ export default function Home() {
                 className="whitespace-pre-wrap tracking-tighter text-black dark:text-white"
               />
               +{" "}
-              <span className="md:text-3xl text-2xl font-normal">
+              <span className="md:text-3xl text-2xl ml-2 font-normal">
                 Years of Experience
               </span>
             </p>
