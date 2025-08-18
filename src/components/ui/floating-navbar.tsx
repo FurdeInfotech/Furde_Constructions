@@ -46,7 +46,7 @@ export const FloatingNav = ({
         animate={{ y: visible ? 0 : -150, opacity: visible ? 1 : 0 }}
         transition={{ duration: 0.25, delay: 0.5 }}
         className={cn(
-          "flex flex-col items-center justify-between md:flex-row md:max-w-[80%] max-w-[94%] fixed sm:top-5 top-5 inset-x-0 mx-auto border rounded-4xl dark:bg-neutral-950 bg-white z-[50] px-8 py-3 overflow-hidden",
+          "flex flex-col items-center justify-between md:flex-row md:max-w-[80%] max-w-[94%] fixed sm:top-10 top-5 inset-x-0 mx-auto border rounded-4xl dark:bg-neutral-950 bg-white z-[50] px-8 py-3 overflow-hidden",
           className,
           menuOpen && "rounded-4xl"
         )}

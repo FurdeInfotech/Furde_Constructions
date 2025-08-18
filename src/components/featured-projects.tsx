@@ -80,7 +80,7 @@ export default function FeaturedProjects() {
         Discover some of our projects
       </p>
 
-      <div ref={containerRef} className="relative h-[400vh] md:mt-5 mt-0">
+      <div ref={containerRef} className="relative h-[400vh] md:mt-10 mt-0">
         {/* Card 1 */}
         <motion.div
           className="sticky top-16 h-screen flex items-center justify-center md:px-10 px-5"

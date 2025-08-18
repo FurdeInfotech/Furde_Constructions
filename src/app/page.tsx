@@ -98,7 +98,7 @@ export default function Home() {
           <h1 className="heading font-semibold md:text-5xl text-3xl leading-snug md:mt-0 mt-5">
             Expertise that Inspires Confidence. Buildings that Instill Pride.
           </h1>
-          <p className="secondary-text mt-5 md:text-xl text-base">
+          <p className="secondary-text md:mt-8 mt-5 md:text-xl text-base">
             We have delivered projects that provide lasting values to the
             investors and communities.
           </p>
@@ -126,7 +126,7 @@ export default function Home() {
               onClick={() => handleVideoPlayer()}
               className="cursor-pointer z-20"
             >
-              <Button className="text-base w-fit bg-[url('/video.jpg')] bg-cover bg-center">
+              <Button className="text-base w-40 h-12 bg-[url('/video.jpg')] bg-cover bg-center">
                 Watch <Play />
               </Button>
             </motion.div>
@@ -153,8 +153,8 @@ export default function Home() {
       <div className="flex md:flex-row md:gap-4 gap-10 flex-col items-center md:px-10 px-5 md:py-10 py-5">
         <div className="heading space-y-7 md:w-1/2">
           <h2 className="section-heading">Our Story</h2>
-          <h3 className="md:text-5xl text-3xl font-semibold leading-snug">
-            Built on Trust, Driven by Precision
+          <h3 className="md:text-5xl text-3xl font-semibold leading-snug heading">
+            Built on Trust, <br />Driven by Precision
           </h3>
         </div>
         <div className="md:w-1/2">

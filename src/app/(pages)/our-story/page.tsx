@@ -28,12 +28,12 @@ function page() {
   ];
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col w-full md:px-6 px-3 py-5 gap-4">
-      <div className="relative w-full md:h-[50vh] h-[60vh] mt-5 rounded-4xl overflow-hidden">
+      <div className="relative w-full md:h-[65vh] h-[60vh] rounded-4xl overflow-hidden">
         <div className="absolute flex justify-center items-start flex-col space-y-5 h-full w-full inset-0 md:bg-black/30 bg-black/40 md:backdrop-blur-sm backdrop-blur-lg z-10 px-6">
-          <h1 className="md:mt-0 mt-[15%] section-heading text-white">
+          <h1 className="md:mt-0 mt-[50%] section-heading text-white">
             Overview
           </h1>
-          <p className="md:mt-5 md:text-xl text-base text-white md:w-1/2 w-full">
+          <p className="md:mt-5 md:text-xl text-base text-white  w-full">
             Furde Constructions is a trusted name in the construction industry
             in and around Solapur, with a legacy dating back to 1989. We empower
             individuals to elevate their lifestyles through thoughtfully
