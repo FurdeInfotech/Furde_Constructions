@@ -156,6 +156,10 @@
   @apply text-[#222222]
 }
 
+.primary-bg-text {
+  @apply text-[#CA6F1E]
+}
+
 .btn-bg {
   @apply bg-[#CA6F1E] text-white
 }
@@ -166,4 +170,12 @@
 .section-heading{
   @apply md:text-3xl text-xl font-bold leading-snug;
   font-family: var(--font-raleway);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
