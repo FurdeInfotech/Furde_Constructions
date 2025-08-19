@@ -29,7 +29,7 @@ function LoanCalculator() {
 
   return (
     <div>
-      <div className="bg rounded-4xl flex justify-between items-center px-5">
+      <div className="bg rounded-4xl mt-5 flex justify-between items-center px-5">
         <LoanCalculatorIcon />
         <div className="flex-col flex items-end w-1/3">
           <h1 className="font-bold md:text-6xl text-3xl primary-bg-text">
@@ -45,7 +45,7 @@ function LoanCalculator() {
       </div>
 
       {/* Inputs */}
-      <div className="grid grid-cols-3 px-5 py-5 gap-x-14">
+      <div className="grid grid-cols-3 px-5 py-5 gap-x-14 mt-5">
         {/* Loan Amount */}
         <div className="flex flex-col">
           <div className="flex justify-between items-center">
