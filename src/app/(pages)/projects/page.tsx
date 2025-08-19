@@ -156,7 +156,7 @@ function Page() {
           Furde Heights redefines modern living in Solapur, offering a perfect balance of comfort, elegance, and
           convenience. Thoughtfully designed with contemporary architecture, it harmonizes beautifully with its
           surroundings to create an exceptional residential experience. Located in Ganesh Nagar, near the RTO, this
-          premium address offers residents easy access to the city's key destinations while enjoying a peaceful
+          premium address offers residents easy access to the city&apos;s key destinations while enjoying a peaceful
           neighborhood ambiance. With spacious, well-planned flats and every amenity crafted for comfort and well-being,
           Furde Heights is where quality living truly begins.
         </TextAnimate>
