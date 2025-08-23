@@ -9,6 +9,7 @@ import { useRef } from "react";
 import LoanCalculator from "@/components/loan-calulator";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import { cn } from "@/lib/utils";
+import BanksMarquee from "@/components/banks";
 
 const Images = [
   "/FH1.png",
@@ -259,6 +260,7 @@ function Page() {
       </div>
 
       <LoanCalculator />
+       <BanksMarquee/>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import  AnimatedArrowButton, { EnhancedAnimatedButton }  from "./ui/animated-but
 
 function ContactUsForm() {
   return (
-    <div className="flex md:flex-row md:gap-4 gap-10 flex-col items-stretch md:px-10 px-5 md:py-10 py-5">
+    <div className="flex md:flex-row md:gap-4 gap-10 flex-col items-stretch md:px-10 px-5 md:py-10 py-5 md:mt-12 mt-0">
       <div className="heading md:space-y-10 space-y-5 md:w-1/2 h-full">
         <h2 className="section-heading">Contact Us</h2>
         <h3 className="md:text-5xl text-3xl font-semibold leading-snug">

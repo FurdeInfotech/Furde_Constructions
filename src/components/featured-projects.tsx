@@ -6,7 +6,8 @@ import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { ArrowRight, MapPin } from "lucide-react";
 import { Badge } from "./ui/badge";
-import  AnimatedArrowButton  from "./ui/animated-button";
+import AnimatedArrowButton from "./ui/animated-button";
+import Link from "next/link";
 
 export default function FeaturedProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -219,6 +220,14 @@ export default function FeaturedProjects() {
             </div>
           </Card>
         </motion.div>
+      </div>
+
+      <div className=" w-full  flex justify-center items-center">
+        <Link href={`/projects`}>
+          <AnimatedArrowButton className="text-base bg-white">
+            View All Projects
+          </AnimatedArrowButton>
+        </Link>
       </div>
     </div>
   );

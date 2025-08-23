@@ -13,6 +13,7 @@ import Video from "next-video";
 import furdeVideo from "../../videos/Furde Constructions.mp4";
 import FeaturedProjects from "@/components/featured-projects";
 import ContactUsForm from "@/components/contact-us-form";
+import BanksMarquee from "@/components/banks";
 
 export default function Home() {
   const [videoPlayer, setVideoPlayer] = useState(false);
@@ -177,6 +178,7 @@ export default function Home() {
 
       <WhyChooseUs />
       <FeaturedProjects />
+      <BanksMarquee/>
       <ContactUsForm />
     </>
   );
