@@ -30,7 +30,7 @@ function LoanCalculator() {
   return (
     <div>
       <div className="bg rounded-4xl mt-5 flex md:flex-row flex-col md:justify-between md:items-center px-5 md:pb-0 pb-7">
-        <LoanCalculatorIcon className=" md:w-full w-[100%]"/>
+        <LoanCalculatorIcon className=" md:w-fit w-[100%]"/>
         <div className="flex-col flex items-end md:w-1/3 w-full">
           <h1 className="font-bold md:text-6xl text-3xl primary-bg-text">
             ₹ {formatAmount(Math.round(emi))}
