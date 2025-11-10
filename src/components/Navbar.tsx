@@ -29,7 +29,7 @@ function Navbar() {
     },
     {
       name: "Contact Us",
-      link: "#contact",
+      link: "/contact-us",
     
     },
   ];

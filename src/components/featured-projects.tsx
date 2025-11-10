@@ -142,7 +142,7 @@ export default function FeaturedProjects() {
           <Card className="w-full md:max-w-8xl md:h-[50rem] max-w-full h-[40rem] shadow-2xl border-0 rounded-3xl relative">
             <div className="absolute inset-0">
               <Image
-                src="/front.png"
+                src="/amar-vishwa-cover.jpg"
                 alt="Furde Heights Building"
                 fill
                 className="object-cover rounded-3xl"
@@ -154,7 +154,7 @@ export default function FeaturedProjects() {
               </div>
 
               <h2 className="md:text-2xl text-lg font-semibold heading mb-3">
-                SmurthiGanda Appts.
+                Amar Vishwa
               </h2>
 
               <div className="flex items-center mb-4 w-full">
@@ -163,7 +163,7 @@ export default function FeaturedProjects() {
                   strokeWidth={2.5}
                 />
                 <span className="md:text-lg text-sm secondary-text">
-                  Vijapur Road, Near Girija Mangalkaryalaya
+                 Bibi Darfal Road, Jijamata School, Kondi-Pune Highway, Solapur
                 </span>
               </div>
               <div className=" w-full flex justify-end md:mt-10 mt-10">
@@ -200,7 +200,7 @@ export default function FeaturedProjects() {
               </div>
 
               <h2 className="md:text-2xl text-lg font-semibold heading mb-3">
-                Furde Residency
+               Vidya Vihar
               </h2>
 
               <div className="flex items-center mb-4">
