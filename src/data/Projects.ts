@@ -59,6 +59,7 @@ export const PROJECTS: Project[] = [
       "/AV10.jpg",
       "/AV11.jpg",
       "/AV12.jpg",
+      "/AV13.jpg",
     ],
     status: "completed",
   },
@@ -72,7 +73,7 @@ export const PROJECTS: Project[] = [
       "Vidyavihar offers state-of-the-art warehouse facilities designed for modern businesses. Strategically located on the Solapur-Pune highway, these warehouses provide excellent logistics connectivity and accessibility. Built with superior infrastructure and ample space, Vidyavihar warehouses are perfect for storage, distribution, and manufacturing operations. Experience the advantage of premium commercial real estate at a prime location.",
     tagline: "Premium Commercial Spaces",
     badge: "Strategic Location",
-    coverImage: "/VV1.jpg",
+    coverImage: "/vidyavihar.jpg",
     images: [
       "/VV1.jpg",
       "/VV2.jpg",
