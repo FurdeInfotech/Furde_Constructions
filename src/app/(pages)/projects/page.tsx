@@ -10,18 +10,15 @@ import LoanCalculator from "@/components/loan-calulator";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import { cn } from "@/lib/utils";
 import BanksMarquee from "@/components/banks";
-
-const Images = [
-  "/FH1.png",
-  "/FH2.png",
-  "/FH3.png",
-  "/FH4.png",
-  "/FH5.png",
-  "/FH6.png",
-  "/FH7.png",
-];
+import { PROJECTS, getProjectById } from "@/data/Projects";
+import { useSearchParams } from "next/navigation";
 
 function Page() {
+  // Get project ID from URL query params
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get("id") || "furde-heights";
+  const project = getProjectById(projectId) || PROJECTS[0];
+  
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: scrollContainerRef,
@@ -63,7 +60,7 @@ function Page() {
             startOnView={true}
             once={false}
           >
-            Furde Heights
+            {project.name}
           </TextAnimate>
 
           <motion.div
@@ -84,7 +81,7 @@ function Page() {
               startOnView={true}
               once={false}
             >
-              Ganesh Nagar, Near RTO office
+              {project.address}
             </TextAnimate>
           </motion.div>
 
@@ -98,25 +95,27 @@ function Page() {
             startOnView={true}
             once={false}
           >
-            2 BHK - 3BHK
+            {project.types}
           </TextAnimate>
 
-          <TextAnimate
-            as="h2"
-            animation="blurInUp"
-            by="word"
-            delay={1.5}
-            duration={0.6}
-            className="md:text-3xl text-xl"
-            startOnView={true}
-            once={false}
-          >
-            Starting at Rs 40,00,000/-
-          </TextAnimate>
+          {project.startingPrice && (
+            <TextAnimate
+              as="h2"
+              animation="blurInUp"
+              by="word"
+              delay={1.5}
+              duration={0.6}
+              className="md:text-3xl text-xl"
+              startOnView={true}
+              once={false}
+            >
+              {`Starting at ${project.startingPrice}`}
+            </TextAnimate>
+          )}
         </motion.div>
 
         <Image
-          src="/hero.png"
+          src={project.coverImage}
           alt="Hero Image"
           fill
           className="object-cover"
@@ -141,7 +140,7 @@ function Page() {
           startOnView={true}
           once={false}
         >
-          Furde Heights
+          {project.name}
         </TextAnimate>
 
         <motion.div
@@ -154,8 +153,7 @@ function Page() {
             variant={"onGoing"}
             className="[&>svg]:size-4 font-bold text-base"
           >
-            <PercentCircle strokeWidth={2.3} size={30} /> Great Flats, Great
-            Deals
+            <PercentCircle strokeWidth={2.3} size={30} /> {project.badge}
           </Badge>
         </motion.div>
 
@@ -169,7 +167,7 @@ function Page() {
           startOnView={true}
           once={false}
         >
-          The Secret to Signature Living
+          {project.tagline}
         </TextAnimate>
 
         <TextAnimate
@@ -182,80 +180,24 @@ function Page() {
           startOnView={true}
           once={false}
         >
-          Furde Heights redefines modern living in Solapur, offering a perfect
-          balance of comfort, elegance, and convenience. Thoughtfully designed
-          with contemporary architecture, it harmonizes beautifully with its
-          surroundings to create an exceptional residential experience. Located
-          in Ganesh Nagar, near the RTO, this premium address offers residents
-          easy access to the city&apos;s key destinations while enjoying a
-          peaceful neighborhood ambiance. With spacious, well-planned flats and
-          every amenity crafted for comfort and well-being, Furde Heights is
-          where quality living truly begins.
+          {project.description}
         </TextAnimate>
       </motion.div>
 
       <div className="flex flex-col mt-10 px-4 max-w-full py-10">
         <h1 className="text-4xl font-bold mb-8">Project Gallery</h1>
 
-        {/* First Row - 2 Cards */}
-        <div className="h-full w-full flex items-start gap-5 mb-5">
-          <BlurFade delay={0.1} inView className="flex-1">
-            <img
-              src={Images[0] || "/placeholder.svg"}
-              alt="Project image 1"
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          </BlurFade>
-          <BlurFade delay={0.15} inView className="flex-1">
-            <img
-              src={Images[1] || "/placeholder.svg"}
-              alt="Project image 2"
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          </BlurFade>
-        </div>
-
-        {/* Middle Row - 3 Cards */}
-        <div className="flex h-full items-start gap-5 w-full mb-5">
-          <BlurFade delay={0.2} inView className="flex-1">
-            <img
-              src={Images[2] || "/placeholder.svg"}
-              alt="Project image 3"
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          </BlurFade>
-          <BlurFade delay={0.25} inView className="flex-1">
-            <img
-              src={Images[3] || "/placeholder.svg"}
-              alt="Project image 4"
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          </BlurFade>
-          <BlurFade delay={0.3} inView className="flex-1">
-            <img
-              src={Images[4] || "/placeholder.svg"}
-              alt="Project image 5"
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          </BlurFade>
-        </div>
-
-        {/* Bottom Row - 2 Cards */}
-        <div className="h-full w-full flex items-start gap-5">
-          <BlurFade delay={0.35} inView className="flex-1">
-            <img
-              src={Images[5] || "/placeholder.svg"}
-              alt="Project image 6"
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          </BlurFade>
-          <BlurFade delay={0.4} inView className="flex-1">
-            <img
-              src={Images[6] || "/placeholder.svg"}
-              alt="Project image 7"
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          </BlurFade>
+        {/* Dynamic Gallery Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {project.images.map((image, index) => (
+            <BlurFade key={index} delay={0.1 + index * 0.05} inView>
+              <img
+                src={image || "/placeholder.svg"}
+                alt={`${project.name} image ${index + 1}`}
+                className="w-full h-full object-cover rounded-2xl aspect-[4/3]"
+              />
+            </BlurFade>
+          ))}
         </div>
       </div>
 

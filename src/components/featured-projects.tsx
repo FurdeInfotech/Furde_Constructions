@@ -8,6 +8,7 @@ import { ArrowRight, MapPin } from "lucide-react";
 import { Badge } from "./ui/badge";
 import AnimatedArrowButton from "./ui/animated-button";
 import Link from "next/link";
+import { PROJECTS } from "@/data/Projects";
 
 export default function FeaturedProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -74,6 +75,9 @@ export default function FeaturedProjects() {
     [10, 30, 10, 5]
   );
 
+  // Get the three featured projects
+  const [project1, project2, project3] = PROJECTS;
+
   return (
     <div className="">
       <h2 className=" text-center mt-16 section-heading">Featured Projects</h2>
@@ -96,19 +100,21 @@ export default function FeaturedProjects() {
             <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-black/10" />
             <div className="absolute inset-0">
               <Image
-                src="/front.png"
-                alt="Furde Heights Building"
+                src={project1.coverImage}
+                alt={`${project1.name} Building`}
                 fill
                 className="object-cover rounded-3xl"
               />
             </div>
             <div className="absolute  md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:left-auto md:right-16 md:translate-x-0  bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
               <div className="mb-3">
-                <Badge variant={"onGoing"}>Ongoing</Badge>
+                <Badge variant={project1.status === "ongoing" ? "onGoing" : "completed"}>
+                  {project1.status.charAt(0).toUpperCase() + project1.status.slice(1)}
+                </Badge>
               </div>
 
               <h2 className="md:text-2xl text-lg font-semibold heading mb-3">
-                Furde Heights
+                {project1.name}
               </h2>
 
               <div className="flex items-center mb-4 w-full">
@@ -117,13 +123,15 @@ export default function FeaturedProjects() {
                   strokeWidth={2.5}
                 />
                 <span className="md:text-lg text-sm secondary-text">
-                  Ganesh Nagar, Near RTO office
+                  {project1.address}
                 </span>
               </div>
               <div className=" w-full flex justify-end md:mt-10 mt-10">
-                <AnimatedArrowButton className=" bg-white">
-                  View
-                </AnimatedArrowButton>
+                <Link href={`/projects?id=${project1.id}`}>
+                  <AnimatedArrowButton className=" bg-white">
+                    View
+                  </AnimatedArrowButton>
+                </Link>
               </div>
             </div>
           </Card>
@@ -142,19 +150,21 @@ export default function FeaturedProjects() {
           <Card className="w-full md:max-w-8xl md:h-[50rem] max-w-full h-[40rem] shadow-2xl border-0 rounded-3xl relative">
             <div className="absolute inset-0">
               <Image
-                src="/amar-vishwa-cover.jpg"
-                alt="Furde Heights Building"
+                src={project2.coverImage}
+                alt={`${project2.name} Building`}
                 fill
                 className="object-cover rounded-3xl"
               />
             </div>
             <div className="absolute  md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:left-auto md:right-16 md:translate-x-0  bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
               <div className="mb-3">
-                <Badge variant={"completed"}>Completed</Badge>
+                <Badge variant={project2.status === "ongoing" ? "onGoing" : "completed"}>
+                  {project2.status.charAt(0).toUpperCase() + project2.status.slice(1)}
+                </Badge>
               </div>
 
               <h2 className="md:text-2xl text-lg font-semibold heading mb-3">
-                Amar Vishwa
+                {project2.name}
               </h2>
 
               <div className="flex items-center mb-4 w-full">
@@ -163,13 +173,15 @@ export default function FeaturedProjects() {
                   strokeWidth={2.5}
                 />
                 <span className="md:text-lg text-sm secondary-text">
-                 Bibi Darfal Road, Jijamata School, Kondi-Pune Highway, Solapur
+                 {project2.address}
                 </span>
               </div>
               <div className=" w-full flex justify-end md:mt-10 mt-10">
-                <AnimatedArrowButton className=" bg-white">
-                  View
-                </AnimatedArrowButton>
+                <Link href={`/projects?id=${project2.id}`}>
+                  <AnimatedArrowButton className=" bg-white">
+                    View
+                  </AnimatedArrowButton>
+                </Link>
               </div>
             </div>
           </Card>
@@ -188,19 +200,21 @@ export default function FeaturedProjects() {
           <Card className="w-full md:max-w-8xl md:h-[50rem] max-w-full h-[40rem] shadow-2xl border-0 rounded-3xl relative p-0">
             <div className="absolute inset-0">
               <Image
-                src="/front.png"
-                alt="Furde Heights Building"
+                src={project3.coverImage}
+                alt={`${project3.name} Building`}
                 fill
                 className="object-cover rounded-3xl"
               />
             </div>
             <div className="absolute  md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:left-auto md:right-16 md:translate-x-0  bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
               <div className="mb-3">
-                <Badge variant={"completed"}>Completed</Badge>
+                <Badge variant={project3.status === "ongoing" ? "onGoing" : "completed"}>
+                  {project3.status.charAt(0).toUpperCase() + project3.status.slice(1)}
+                </Badge>
               </div>
 
               <h2 className="md:text-2xl text-lg font-semibold heading mb-3">
-               Vidya Vihar
+               {project3.name}
               </h2>
 
               <div className="flex items-center mb-4">
@@ -209,13 +223,15 @@ export default function FeaturedProjects() {
                   strokeWidth={2.5}
                 />
                 <span className="md:text-lg text-sm secondary-text">
-                  Vijapur Road
+                  {project3.address}
                 </span>
               </div>
               <div className=" w-full flex justify-end md:mt-10 mt-10">
-                <AnimatedArrowButton className=" bg-white">
-                  View
-                </AnimatedArrowButton>
+                <Link href={`/projects?id=${project3.id}`}>
+                  <AnimatedArrowButton className=" bg-white">
+                    View
+                  </AnimatedArrowButton>
+                </Link>
               </div>
             </div>
           </Card>
