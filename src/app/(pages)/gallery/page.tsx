@@ -31,7 +31,7 @@ function Page() {
       : PROJECTS.filter((project) => project.name === filter);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50/30 to-gray-50 py-10 px-4 md:px-8 sm:pt-14 pt-24">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50/30 to-gray-50 py-10 px-4 md:px-8 sm:pt-32 pt-28">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
