@@ -5,7 +5,7 @@ import { MapPin, PercentCircle } from "lucide-react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { TextAnimate } from "@/components/magicui/text-animate";
-import { useRef } from "react";
+import { useRef, Suspense } from "react";
 import LoanCalculator from "@/components/loan-calulator";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,7 @@ import BanksMarquee from "@/components/banks";
 import { PROJECTS, getProjectById } from "@/data/Projects";
 import { useSearchParams } from "next/navigation";
 
-function Page() {
+function ProjectContent() {
   // Get project ID from URL query params
   const searchParams = useSearchParams();
   const projectId = searchParams.get("id") || "furde-heights";
@@ -204,6 +204,18 @@ function Page() {
       <LoanCalculator />
        <BanksMarquee/>
     </div>
+  );
+}
+
+function Page() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#CA6F1E]"></div>
+      </div>
+    }>
+      <ProjectContent />
+    </Suspense>
   );
 }
 
