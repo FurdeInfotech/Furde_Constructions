@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 function Footer() {
   const navItems = [
@@ -24,6 +25,12 @@ function Footer() {
       link: "#contact",
     },
   ];
+
+    const pathname = usePathname();
+  
+    if (pathname.startsWith("/dashboard") || pathname.startsWith("/employees")) {
+      return <div></div>;
+    }
 
   const year = new Date().getFullYear();
   return (

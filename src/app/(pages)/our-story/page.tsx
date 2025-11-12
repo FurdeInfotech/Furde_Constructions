@@ -52,6 +52,9 @@ function page() {
           priority
         />
       </div>
+
+      <SteeringOurMission />
+      <MileStone />
       <div className=" md:px-6 px-3 mt-7">
         <h1 className=" section-heading">Why Choose Us</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
@@ -65,10 +68,6 @@ function page() {
           ))}
         </div>
       </div>
-
-
-    <MileStone/>
-    <SteeringOurMission/>
     </div>
   );
 }

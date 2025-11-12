@@ -8,6 +8,7 @@ import {
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/footer";
+import { Providers } from "@/components/providers";
 
 // Load all weights for each font
 const geistSans = Geist({
@@ -55,9 +56,11 @@ export default function RootLayout({
           antialiased
         `}
       >
-        <Navbar />
-        {children}
-        <Footer/>
+        <Providers>
+          <Navbar />
+          {children}
+          <Footer/>
+        </Providers>
       </body>
     </html>
   );

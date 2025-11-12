@@ -150,12 +150,12 @@ function ContactUsForm() {
             <div className=" flex md:justify-normal justify-end">
               <EnhancedAnimatedButton 
                 type="submit" 
-                variant="phone" 
-                icon={isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Phone className="w-5 h-5" />} 
-                iconPosition="right"
+               
+                icon={isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <></>} 
+             
                 disabled={isLoading}
               >
-                {isLoading ? "Sending..." : "Get Call Back"}
+                {isLoading ? "Submitting..." : "Submit"}
               </EnhancedAnimatedButton>
             </div>
           </div>

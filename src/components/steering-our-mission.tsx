@@ -10,13 +10,13 @@ function SteeringOurMission() {
           Meet the Visionaries Behind Furde Constructions
         </p>
       </div>
-      <div className="flex sm:flex-row flex-col justify-between items-center gap-8 md:pt-12 ">
-        <div className="sm:w-[20%] w-full">
-          <div className="aspect-[3/4] sm:h-[500px] relative overflow-hidden rounded-lg shadow-lg  transition-shadow duration-300">
-            <Image src="/sunil_furde.jpg" alt="Sunil Furde" fill className="object-cover object-center" />
+      <div className="flex lg:flex-row flex-col lg:justify-between lg:items-center gap-8 md:pt-12 ">
+        <div className="md:w-[20%] w-full">
+          <div className="aspect-[3/4] md:h-[500px] relative overflow-hidden rounded-lg shadow-lg  transition-shadow duration-300">
+            <Image src="/sunil_furde.png" alt="Sunil Furde" fill className="object-cover object-center" />
           </div>
         </div>
-        <div className="sm:w-[70%] w-full">
+        <div className="lg:w-[70%] w-full">
           <h2 className="font-semibold text-3xl text-[#4E4E4E] heading">Founder</h2>
           <h3 className="mt-3 font-semibold text-4xl heading">Sunil Furde</h3>
           <p className="mt-5 text-base md:text-2xl leading-relaxed">
@@ -31,13 +31,13 @@ function SteeringOurMission() {
         </div>
       </div>
 
-      <div className="flex sm:flex-row flex-col justify-between items-center gap-8">
-        <div className="sm:w-[20%] w-full">
-          <div className="aspect-[3/4]  sm:h-[500px] relative overflow-hidden rounded-lg shadow-lg transition-shadow duration-300">
+      <div className="flex lg:flex-row flex-col lg:justify-between lg:items-center gap-8">
+        <div className="md:w-[20%] w-full">
+          <div className="aspect-[3/4]  md:h-[500px] relative overflow-hidden rounded-lg shadow-lg transition-shadow duration-300">
             <Image src="/rohit_furde.jpg" alt="Rohit Furde" fill className="object-cover object-center" />
           </div>
         </div>
-        <div className="sm:w-[70%] w-full">
+        <div className="lg:w-[70%] w-full">
           <h2 className="font-semibold text-3xl text-[#4E4E4E] heading">Executive Director</h2>
           <h3 className="mt-3 font-semibold text-4xl heading">Rohit Furde</h3>
           <p className="mt-5 text-base md:text-2xl leading-relaxed">
