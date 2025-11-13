@@ -2,20 +2,23 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
-import { ArrowRight, MapPin } from "lucide-react";
-import { Badge } from "./ui/badge";
 import AnimatedArrowButton from "./ui/animated-button";
 import Link from "next/link";
-import { PROJECTS } from "@/data/Projects";
+import { useProjects, getFeaturedProjects } from "@/hooks/useProjects";
+import ProjectCard from "./project-card";
+import ProjectCardSkeleton from "./project-card-skeleton";
 
 export default function FeaturedProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { projects, loading, error } = useProjects();
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
+
+  // Get featured projects (Furde Heights, Amar Vishwa, Vidyavihar)
+  const featuredProjects = getFeaturedProjects(projects);
 
   // Card 1: Active from 0 to 0.25, then slides behind with proper spacing
   const card1Y = useTransform(
@@ -75,8 +78,17 @@ export default function FeaturedProjects() {
     [10, 30, 10, 5]
   );
 
-  // Get the three featured projects
-  const [project1, project2, project3] = PROJECTS;
+  // Handle error state
+  if (error) {
+    return (
+      <div className="text-center py-20">
+        <h2 className="text-2xl font-semibold text-red-600 mb-4">
+          Failed to Load Projects
+        </h2>
+        <p className="text-gray-600">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="">
@@ -86,156 +98,72 @@ export default function FeaturedProjects() {
       </p>
 
       <div ref={containerRef} className="relative h-[400vh] md:mt-10 mt-0">
-        {/* Card 1 */}
-        <motion.div
-          className="sticky top-16 h-screen flex items-center justify-center md:px-10 px-5"
-          style={{
-            y: card1Y,
-            scale: card1Scale,
-            opacity: card1Opacity,
-            zIndex: card1Z,
-          }}
-        >
-          <Card className="w-full md:max-w-8xl md:h-[50rem] max-w-full h-[40rem] shadow-2xl border-0 rounded-3xl relative overflow-hidden">
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-black/10" />
-            <div className="absolute inset-0">
-              <Image
-                src={project1.coverImage}
-                alt={`${project1.name} Building`}
-                fill
-                className="object-cover rounded-3xl"
+        {loading ? (
+          // Show skeleton loading for 3 cards
+          <>
+            <ProjectCardSkeleton
+              style={{
+                y: card1Y,
+                scale: card1Scale,
+                opacity: card1Opacity,
+                zIndex: card1Z,
+              }}
+            />
+            <ProjectCardSkeleton
+              style={{
+                y: card2Y,
+                scale: card2Scale,
+                opacity: card2Opacity,
+                zIndex: card2Z,
+              }}
+            />
+            <ProjectCardSkeleton
+              style={{
+                y: card3Y,
+                scale: card3Scale,
+                opacity: card3Opacity,
+                zIndex: card3Z,
+              }}
+            />
+          </>
+        ) : (
+          // Show actual project cards
+          <>
+            {featuredProjects[0] && (
+              <ProjectCard
+                project={featuredProjects[0]}
+                style={{
+                  y: card1Y,
+                  scale: card1Scale,
+                  opacity: card1Opacity,
+                  zIndex: card1Z,
+                }}
               />
-            </div>
-            <div className="absolute  md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:left-auto md:right-16 md:translate-x-0  bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
-              <div className="mb-3">
-                <Badge variant={project1.status === "ongoing" ? "onGoing" : "completed"}>
-                  {project1.status.charAt(0).toUpperCase() + project1.status.slice(1)}
-                </Badge>
-              </div>
-
-              <h2 className="md:text-2xl text-lg font-semibold heading mb-3">
-                {project1.name}
-              </h2>
-
-              <div className="flex items-center mb-4 w-full">
-                <MapPin
-                  className="w-6 h-6 mr-2 text-[#CA6F1E]"
-                  strokeWidth={2.5}
-                />
-                <span className="md:text-lg text-sm secondary-text">
-                  {project1.address}
-                </span>
-              </div>
-              <div className=" w-full flex justify-end md:mt-10 mt-10">
-                <Link href={`/projects?id=${project1.id}`}>
-                  <AnimatedArrowButton className=" bg-white">
-                    View
-                  </AnimatedArrowButton>
-                </Link>
-              </div>
-            </div>
-          </Card>
-        </motion.div>
-
-        {/* Card 2 */}
-        <motion.div
-          className="sticky top-16 h-screen flex items-center justify-center  md:px-10 px-5"
-          style={{
-            y: card2Y,
-            scale: card2Scale,
-            opacity: card2Opacity,
-            zIndex: card2Z,
-          }}
-        >
-          <Card className="w-full md:max-w-8xl md:h-[50rem] max-w-full h-[40rem] shadow-2xl border-0 rounded-3xl relative">
-            <div className="absolute inset-0">
-              <Image
-                src={project2.coverImage}
-                alt={`${project2.name} Building`}
-                fill
-                className="object-cover rounded-3xl"
+            )}
+            {featuredProjects[1] && (
+              <ProjectCard
+                project={featuredProjects[1]}
+                style={{
+                  y: card2Y,
+                  scale: card2Scale,
+                  opacity: card2Opacity,
+                  zIndex: card2Z,
+                }}
               />
-            </div>
-            <div className="absolute  md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:left-auto md:right-16 md:translate-x-0  bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
-              <div className="mb-3">
-                <Badge variant={project2.status === "ongoing" ? "onGoing" : "completed"}>
-                  {project2.status.charAt(0).toUpperCase() + project2.status.slice(1)}
-                </Badge>
-              </div>
-
-              <h2 className="md:text-2xl text-lg font-semibold heading mb-3">
-                {project2.name}
-              </h2>
-
-              <div className="flex items-center mb-4 w-full">
-                <MapPin
-                  className="w-6 h-6 mr-2 text-[#CA6F1E]"
-                  strokeWidth={2.5}
-                />
-                <span className="md:text-lg text-sm secondary-text">
-                 {project2.address}
-                </span>
-              </div>
-              <div className=" w-full flex justify-end md:mt-10 mt-10">
-                <Link href={`/projects?id=${project2.id}`}>
-                  <AnimatedArrowButton className=" bg-white">
-                    View
-                  </AnimatedArrowButton>
-                </Link>
-              </div>
-            </div>
-          </Card>
-        </motion.div>
-
-        {/* Card 3 */}
-        <motion.div
-          className="sticky top-16 h-screen flex items-center justify-center md:px-10 px-5"
-          style={{
-            y: card3Y,
-            scale: card3Scale,
-            opacity: card3Opacity,
-            zIndex: card3Z,
-          }}
-        >
-          <Card className="w-full md:max-w-8xl md:h-[50rem] max-w-full h-[40rem] shadow-2xl border-0 rounded-3xl relative p-0">
-            <div className="absolute inset-0">
-              <Image
-                src={project3.coverImage}
-                alt={`${project3.name} Building`}
-                fill
-                className="object-cover rounded-3xl"
+            )}
+            {featuredProjects[2] && (
+              <ProjectCard
+                project={featuredProjects[2]}
+                style={{
+                  y: card3Y,
+                  scale: card3Scale,
+                  opacity: card3Opacity,
+                  zIndex: card3Z,
+                }}
               />
-            </div>
-            <div className="absolute  md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:left-auto md:right-16 md:translate-x-0  bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
-              <div className="mb-3">
-                <Badge variant={project3.status === "ongoing" ? "onGoing" : "completed"}>
-                  {project3.status.charAt(0).toUpperCase() + project3.status.slice(1)}
-                </Badge>
-              </div>
-
-              <h2 className="md:text-2xl text-lg font-semibold heading mb-3">
-               {project3.name}
-              </h2>
-
-              <div className="flex items-center mb-4">
-                <MapPin
-                  className="w-6 h-6 mr-2 text-[#CA6F1E]"
-                  strokeWidth={2.5}
-                />
-                <span className="md:text-lg text-sm secondary-text">
-                  {project3.address}
-                </span>
-              </div>
-              <div className=" w-full flex justify-end md:mt-10 mt-10">
-                <Link href={`/projects?id=${project3.id}`}>
-                  <AnimatedArrowButton className=" bg-white">
-                    View
-                  </AnimatedArrowButton>
-                </Link>
-              </div>
-            </div>
-          </Card>
-        </motion.div>
+            )}
+          </>
+        )}
       </div>
 
       <div className=" w-full  flex justify-center items-center">

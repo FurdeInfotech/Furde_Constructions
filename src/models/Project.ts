@@ -47,7 +47,7 @@ const ProjectSchema: Schema<IProject> = new mongoose.Schema({
   },
   coverImage: {
     type: String,
-    required: [true, "Cover image is required"],
+    // required: [true, "Cover image is required"],
   },
   images: [{
     type: String,
