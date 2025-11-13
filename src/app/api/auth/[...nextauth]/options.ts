@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.admin = {
           id: token.id, // Use 'id' instead of '_id'
-          email: token.email,
+          email: token.email || undefined,
         };
       }
       return session;

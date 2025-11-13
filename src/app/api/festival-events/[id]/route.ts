@@ -6,11 +6,12 @@ import { getToken } from "next-auth/jwt";
 // GET - Fetch single festival event
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
-    const event = await FestivalEventModel.findById(params.id);
+    const { id } = await params;
+    const event = await FestivalEventModel.findById(id);
     
     if (!event) {
       return NextResponse.json(
@@ -32,7 +33,7 @@ export async function GET(
 // PUT - Update festival event
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -46,9 +47,10 @@ export async function PUT(
 
     await dbConnect();
     const body = await request.json();
+    const { id } = await params;
     
     const event = await FestivalEventModel.findByIdAndUpdate(
-      params.id,
+      id,
       body,
       { new: true, runValidators: true }
     );
@@ -75,7 +77,7 @@ export async function PUT(
 // DELETE - Delete festival event
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -88,7 +90,8 @@ export async function DELETE(
     }
 
     await dbConnect();
-    const event = await FestivalEventModel.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const event = await FestivalEventModel.findByIdAndDelete(id);
     
     if (!event) {
       return NextResponse.json(

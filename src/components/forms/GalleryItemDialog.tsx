@@ -17,12 +17,26 @@ import {
 
 type ItemType = 'award' | 'event';
 
+interface AwardData {
+  title: string;
+  description?: string;
+  category?: string;
+  awardDate?: string;
+  images: string[];
+}
+
+interface EventData {
+  title: string;
+  type?: string;
+  images: string[];
+}
+
 interface GalleryItemDialogProps {
   type: ItemType;
   item?: any;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: AwardData | EventData) => void;
   isLoading?: boolean;
 }
 
@@ -92,7 +106,7 @@ export function GalleryItemDialog({
     e.preventDefault();
     
     // Prepare data based on type
-    let submitData = { ...formData };
+    let submitData: AwardData | EventData;
     
     if (type === 'award') {
       // For awards, map 'type' field to 'category'
@@ -102,14 +116,14 @@ export function GalleryItemDialog({
         category: formData.type, // Map type to category for awards
         awardDate: formData.awardDate,
         images: formData.images,
-      };
+      } as AwardData;
     } else {
       // For events, keep as is
       submitData = {
         title: formData.title,
         type: formData.type,
         images: formData.images,
-      };
+      } as EventData;
     }
     
     onSubmit(submitData);

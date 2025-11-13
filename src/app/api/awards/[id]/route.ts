@@ -7,11 +7,12 @@ import { deleteCloudinaryFiles } from "@/lib/cloudinary";
 // GET - Fetch single award
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
-    const award = await AwardModel.findById(params.id);
+    const { id } = await params;
+    const award = await AwardModel.findById(id);
     
     if (!award) {
       return NextResponse.json(
@@ -33,7 +34,7 @@ export async function GET(
 // PUT - Update award
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -47,9 +48,10 @@ export async function PUT(
 
     await dbConnect();
     const body = await request.json();
+    const { id } = await params;
     
     const award = await AwardModel.findByIdAndUpdate(
-      params.id,
+      id,
       body,
       { new: true, runValidators: true }
     );
@@ -76,7 +78,7 @@ export async function PUT(
 // DELETE - Delete award
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -89,7 +91,8 @@ export async function DELETE(
     }
 
     await dbConnect();
-    const award = await AwardModel.findById(params.id);
+    const { id } = await params;
+    const award = await AwardModel.findById(id);
     
     if (!award) {
       return NextResponse.json(
@@ -99,7 +102,7 @@ export async function DELETE(
     }
 
     // Delete the award from database
-    await AwardModel.findByIdAndDelete(params.id);
+    await AwardModel.findByIdAndDelete(id);
 
     // Delete files from Cloudinary (don't wait for completion)
     if (award.images && award.images.length > 0) {

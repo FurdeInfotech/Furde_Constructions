@@ -261,7 +261,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
       <div>
         <label className="block text-sm font-medium mb-2">Description *</label>
         <textarea
-          value={formData.description}
+          value={formData.description as string}
           onChange={(e) => handleInputChange('description', e.target.value)}
           className="w-full p-2 border rounded-md h-24"
           required
@@ -304,7 +304,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
           multiple={false}
           maxFiles={1}
         />
-        {formData.coverImage && (
+        {formData.coverImage as string && (
           <div className="mt-2">
             <Badge variant="outline">Cover image uploaded</Badge>
           </div>
@@ -361,7 +361,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
       <div>
         <label className="block text-sm font-medium mb-2">Event Title *</label>
         <Input
-          value={formData.title}
+          value={formData.title as string}
           onChange={(e) => handleInputChange('title', e.target.value)}
           required
         />

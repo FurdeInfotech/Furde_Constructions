@@ -7,11 +7,12 @@ import { deleteCloudinaryFiles } from "@/lib/cloudinary";
 // GET - Fetch single project
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
-    const project = await ProjectModel.findById(params.id);
+    const { id } = await params;
+    const project = await ProjectModel.findById(id);
     
     if (!project) {
       return NextResponse.json(
@@ -33,7 +34,7 @@ export async function GET(
 // PUT - Update project
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -47,9 +48,10 @@ export async function PUT(
 
     await dbConnect();
     const body = await request.json();
+    const { id } = await params;
     
     const project = await ProjectModel.findByIdAndUpdate(
-      params.id,
+      id,
       body,
       { new: true, runValidators: true }
     );
@@ -76,7 +78,7 @@ export async function PUT(
 // DELETE - Delete project
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -89,7 +91,8 @@ export async function DELETE(
     }
 
     await dbConnect();
-    const project = await ProjectModel.findById(params.id);
+    const { id } = await params;
+    const project = await ProjectModel.findById(id);
     
     if (!project) {
       return NextResponse.json(
@@ -105,7 +108,7 @@ export async function DELETE(
     ].filter(Boolean);
 
     // Delete the project from database
-    await ProjectModel.findByIdAndDelete(params.id);
+    await ProjectModel.findByIdAndDelete(id);
 
     // Delete files from Cloudinary (don't wait for completion)
     if (filesToDelete.length > 0) {

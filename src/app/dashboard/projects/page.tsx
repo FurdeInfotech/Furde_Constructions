@@ -23,6 +23,7 @@ interface Project {
   googleMapLink?: string;
   brochures: string[];
   createdAt: string;
+  [key: string]: unknown;
 }
 
 export default function Projects() {
@@ -124,7 +125,7 @@ export default function Projects() {
         
         <ItemForm
           type="project"
-          item={editingProject}
+          item={editingProject || undefined}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           isLoading={submitting}
