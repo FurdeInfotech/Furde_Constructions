@@ -39,7 +39,7 @@ export const PROJECTS: Project[] = [
     id: "amar-vishwa",
     name: "Amar Vishwa",
     address: "Bibi Darfal Road, Jijamata School, Kondi-Pune Highway, Solapur",
-    types: "1BHK - 2BHK - Bungalow",
+    types: "1BHK - 2BHK - Bungalow & Open Plots",
     startingPrice: "Rs 19,90,000/-",
     description:
       "Amar Vishwa brings you a perfect blend of modern amenities and comfortable living spaces. Strategically located on the Kondi-Pune Highway, this project offers excellent connectivity while maintaining a serene environment. Choose from 1BHK, 2BHK premium bungalows designed to suit your lifestyle. With thoughtful planning and quality construction, Amar Vishwa is an ideal choice for those seeking a peaceful yet well-connected home in Solapur.",

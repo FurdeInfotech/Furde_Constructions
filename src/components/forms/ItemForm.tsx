@@ -10,48 +10,79 @@ import { X } from 'lucide-react';
 
 type ItemType = 'project' | 'award' | 'event';
 
+interface ProjectFormData {
+  name: string;
+  address: string;
+  types: string;
+  startingPrice?: string;
+  description: string;
+  tagline: string;
+  badge: string;
+  status: 'ongoing' | 'completed' | 'upcoming';
+  googleMapLink?: string;
+  coverImage: string;
+  images: string[];
+  brochures: string[];
+}
+
+interface AwardFormData {
+  title: string;
+  description?: string;
+  category?: string;
+  awardDate?: string;
+  images: string[];
+}
+
+interface EventFormData {
+  title: string;
+  type: string;
+  images: string[];
+}
+
+type FormData = ProjectFormData | AwardFormData | EventFormData;
+
 interface ItemFormProps {
   type: ItemType;
-  item?: any;
-  onSubmit: (data: any) => void;
+  item?: Record<string, unknown>;
+  onSubmit: (data: Record<string, unknown>) => void;
   onCancel: () => void;
   isLoading?: boolean;
 }
 
 export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: ItemFormProps) {
-  const [formData, setFormData] = useState<any>(() => {
+  const [formData, setFormData] = useState<Record<string, unknown>>(() => {
     const baseData = {
-      images: item?.images || [],
+      images: (item?.images as string[]) || [],
     };
     
     if (type === 'project') {
       return {
         ...baseData,
-        name: item?.name || '',
-        address: item?.address || '',
-        types: item?.types || '',
-        startingPrice: item?.startingPrice || '',
-        description: item?.description || '',
-        tagline: item?.tagline || '',
-        badge: item?.badge || '',
-        status: item?.status || 'ongoing',
-        googleMapLink: item?.googleMapLink || '',
-        coverImage: item?.coverImage || '',
-        brochures: item?.brochures || [],
+        name: (item?.name as string) || '',
+        address: (item?.address as string) || '',
+        types: (item?.types as string) || '',
+        startingPrice: (item?.startingPrice as string) || '',
+        description: (item?.description as string) || '',
+        tagline: (item?.tagline as string) || '',
+        badge: (item?.badge as string) || '',
+        status: (item?.status as string) || 'ongoing',
+        googleMapLink: (item?.googleMapLink as string) || '',
+        coverImage: (item?.coverImage as string) || '',
+        brochures: (item?.brochures as string[]) || [],
       };
     } else if (type === 'award') {
       return {
         ...baseData,
-        title: item?.title || '',
-        description: item?.description || '',
-        category: item?.category || '',
-        awardDate: item?.awardDate ? new Date(item.awardDate).toISOString().split('T')[0] : '',
+        title: (item?.title as string) || '',
+        description: (item?.description as string) || '',
+        category: (item?.category as string) || '',
+        awardDate: item?.awardDate ? new Date(item.awardDate as string).toISOString().split('T')[0] : '',
       };
     } else { // event
       return {
         ...baseData,
-        title: item?.title || '',
-        type: item?.type || '',
+        title: (item?.title as string) || '',
+        type: (item?.type as string) || '',
       };
     }
   });
@@ -60,15 +91,15 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
   const [uploading, setUploading] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev: any) => ({ ...prev, [field]: value }));
+    setFormData((prev: Record<string, unknown>) => ({ ...prev, [field]: value }));
   };
 
-  const handleFileUpload = async (files: File[]) => {
+  const handleImagesUpload = async (files: File[]) => {
     setUploading(true);
     try {
       const formDataUpload = new FormData();
       files.forEach(file => formDataUpload.append('files', file));
-      formDataUpload.append('folder', `furde-constructions/${type}s`);
+      formDataUpload.append('folder', `furde-constructions/${type}s/images`);
 
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -77,21 +108,45 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
 
       const result = await response.json();
       if (result.success) {
-        const newUrls = result.data.map((file: any) => file.url);
-        setUploadedFiles(prev => [...prev, ...newUrls]);
+        const imageUrls = result.data.map((file: { url: string }) => file.url);
+        setUploadedFiles(prev => [...prev, ...imageUrls]);
         
-        // Add to appropriate field based on file type
-        const imageUrls = result.data.filter((file: any) => file.resource_type === 'image').map((file: any) => file.url);
-        const pdfUrls = result.data.filter((file: any) => file.resource_type === 'raw').map((file: any) => file.url);
-        
-        setFormData((prev: any) => ({
+        setFormData((prev: Record<string, unknown>) => ({
           ...prev,
-          images: [...(prev.images || []), ...imageUrls],
-          ...(type === 'project' && { brochures: [...(prev.brochures || []), ...pdfUrls] })
+          images: [...((prev.images as string[]) || []), ...imageUrls]
         }));
       }
     } catch (error) {
-      console.error('Error uploading files:', error);
+      console.error('Error uploading images:', error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleBrochuresUpload = async (files: File[]) => {
+    setUploading(true);
+    try {
+      const formDataUpload = new FormData();
+      files.forEach(file => formDataUpload.append('files', file));
+      formDataUpload.append('folder', `furde-constructions/projects/brochures`);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formDataUpload,
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        const brochureUrls = result.data.map((file: { url: string }) => file.url);
+        setUploadedFiles(prev => [...prev, ...brochureUrls]);
+        
+        setFormData((prev: Record<string, unknown>) => ({
+          ...prev,
+          brochures: [...((prev.brochures as string[]) || []), ...brochureUrls]
+        }));
+      }
+    } catch (error) {
+      console.error('Error uploading brochures:', error);
     } finally {
       setUploading(false);
     }
@@ -114,7 +169,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
       const result = await response.json();
       if (result.success && result.data.length > 0) {
         const coverImageUrl = result.data[0].url;
-        setFormData((prev: any) => ({
+        setFormData((prev: Record<string, unknown>) => ({
           ...prev,
           coverImage: coverImageUrl
         }));
@@ -127,10 +182,20 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
   };
 
   const removeImage = (index: number, field: 'images' | 'brochures' = 'images') => {
-    setFormData((prev: any) => ({
-      ...prev,
-      [field]: prev[field].filter((_: any, i: number) => i !== index)
-    }));
+    setFormData((prev: Record<string, unknown>) => {
+      if (field === 'images') {
+        return {
+          ...prev,
+          images: ((prev.images as string[]) || []).filter((_, i: number) => i !== index)
+        };
+      } else if (field === 'brochures') {
+        return {
+          ...prev,
+          brochures: ((prev.brochures as string[]) || []).filter((_, i: number) => i !== index)
+        };
+      }
+      return prev;
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -144,7 +209,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
         <div>
           <label className="block text-sm font-medium mb-2">Project Name *</label>
           <Input
-            value={formData.name}
+            value={formData.name as string}
             onChange={(e) => handleInputChange('name', e.target.value)}
             required
           />
@@ -152,7 +217,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
         <div>
           <label className="block text-sm font-medium mb-2">Status *</label>
           <select
-            value={formData.status}
+            value={formData.status as string}
             onChange={(e) => handleInputChange('status', e.target.value)}
             className="w-full p-2 border rounded-md"
             required
@@ -167,7 +232,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
       <div>
         <label className="block text-sm font-medium mb-2">Address *</label>
         <Input
-          value={formData.address}
+          value={formData.address as string}
           onChange={(e) => handleInputChange('address', e.target.value)}
           required
         />
@@ -177,7 +242,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
         <div>
           <label className="block text-sm font-medium mb-2">Property Types *</label>
           <Input
-            value={formData.types}
+            value={formData.types as string}
             onChange={(e) => handleInputChange('types', e.target.value)}
             placeholder="e.g., 2BHK - 3BHK"
             required
@@ -186,7 +251,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
         <div>
           <label className="block text-sm font-medium mb-2">Starting Price</label>
           <Input
-            value={formData.startingPrice}
+            value={formData.startingPrice as string}
             onChange={(e) => handleInputChange('startingPrice', e.target.value)}
             placeholder="e.g., Rs 28,31,000/-"
           />
@@ -207,7 +272,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
         <div>
           <label className="block text-sm font-medium mb-2">Tagline *</label>
           <Input
-            value={formData.tagline}
+            value={formData.tagline as string}
             onChange={(e) => handleInputChange('tagline', e.target.value)}
             required
           />
@@ -215,7 +280,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
         <div>
           <label className="block text-sm font-medium mb-2">Badge *</label>
           <Input
-            value={formData.badge}
+            value={formData.badge as string}
             onChange={(e) => handleInputChange('badge', e.target.value)}
             required
           />
@@ -225,7 +290,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
       <div>
         <label className="block text-sm font-medium mb-2">Google Maps Link</label>
         <Input
-          value={formData.googleMapLink}
+          value={formData.googleMapLink as string}
           onChange={(e) => handleInputChange('googleMapLink', e.target.value)}
           placeholder="https://maps.google.com/..."
         />
@@ -251,9 +316,11 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
   const renderAwardFields = () => (
     <>
       <div>
-        <label className="block text-sm font-medium mb-2">Award Title *</label>
+        <label className="block text-sm font-medium mb-2">
+          {type === 'award' ? 'Award' : 'Event'} Title *
+        </label>
         <Input
-          value={formData.title}
+          value={formData.title as string}
           onChange={(e) => handleInputChange('title', e.target.value)}
           required
         />
@@ -262,7 +329,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
       <div>
         <label className="block text-sm font-medium mb-2">Description</label>
         <textarea
-          value={formData.description}
+          value={formData.description as string}
           onChange={(e) => handleInputChange('description', e.target.value)}
           className="w-full p-2 border rounded-md h-24"
         />
@@ -272,7 +339,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
         <div>
           <label className="block text-sm font-medium mb-2">Category</label>
           <Input
-            value={formData.category}
+            value={formData.category as string}
             onChange={(e) => handleInputChange('category', e.target.value)}
             placeholder="e.g., Excellence Award"
           />
@@ -281,7 +348,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
           <label className="block text-sm font-medium mb-2">Award Date</label>
           <Input
             type="date"
-            value={formData.awardDate}
+            value={formData.awardDate as string}
             onChange={(e) => handleInputChange('awardDate', e.target.value)}
           />
         </div>
@@ -303,7 +370,7 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
       <div>
         <label className="block text-sm font-medium mb-2">Event Type *</label>
         <Input
-          value={formData.type}
+          value={formData.type as string}
           onChange={(e) => handleInputChange('type', e.target.value)}
           placeholder="e.g., Festival, Celebration, Corporate Event"
           required
@@ -328,25 +395,36 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
           {type === 'award' && renderAwardFields()}
           {type === 'event' && renderEventFields()}
           
-          {/* File Upload Section */}
+          {/* Images Upload Section */}
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Upload Images {type === 'project' && '& Brochures'}
-            </label>
+            <label className="block text-sm font-medium mb-2">Upload Images</label>
             <FileUpload
-              onUpload={handleFileUpload}
-              accept={type === 'project' ? "image/*,application/pdf" : "image/*"}
+              onUpload={handleImagesUpload}
+              accept="image/*"
               multiple={true}
               maxFiles={10}
             />
           </div>
           
-          {/* Display uploaded images */}
-          {formData.images.length > 0 && (
+          {/* Brochures Upload Section - Only for projects */}
+          {type === 'project' && (
             <div>
-              <h4 className="font-medium mb-2">Images ({formData.images.length})</h4>
+              <label className="block text-sm font-medium mb-2">Upload Brochures (PDF)</label>
+              <FileUpload
+                onUpload={handleBrochuresUpload}
+                accept="application/pdf"
+                multiple={true}
+                maxFiles={5}
+              />
+            </div>
+          )}
+          
+          {/* Display uploaded images */}
+          {((formData.images as string[]) || []).length > 0 && (
+            <div>
+              <h4 className="font-medium mb-2">Images ({((formData.images as string[]) || []).length})</h4>
               <div className="flex flex-wrap gap-2">
-                {formData.images.map((url: string, index: number) => (
+                {((formData.images as string[]) || []).map((url: string, index: number) => (
                   <div key={index} className="relative">
                     <Badge variant="outline" className="pr-6">
                       Image {index + 1}
@@ -365,11 +443,11 @@ export function ItemForm({ type, item, onSubmit, onCancel, isLoading = false }: 
           )}
           
           {/* Display uploaded brochures for projects */}
-          {type === 'project' && formData.brochures && formData.brochures.length > 0 && (
+          {type === 'project' && ((formData.brochures as string[]) || []).length > 0 && (
             <div>
-              <h4 className="font-medium mb-2">Brochures ({formData.brochures.length})</h4>
+              <h4 className="font-medium mb-2">Brochures ({((formData.brochures as string[]) || []).length})</h4>
               <div className="flex flex-wrap gap-2">
-                {formData.brochures.map((url: string, index: number) => (
+                {((formData.brochures as string[]) || []).map((url: string, index: number) => (
                   <div key={index} className="relative">
                     <Badge variant="outline" className="pr-6">
                       Brochure {index + 1}

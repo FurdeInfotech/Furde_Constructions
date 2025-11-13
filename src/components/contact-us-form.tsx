@@ -64,6 +64,7 @@ function ContactUsForm() {
 
   return (
     <div className="flex md:flex-row md:gap-4 gap-10 flex-col items-stretch md:px-10 px-5 md:py-10 py-5 md:mt-12 mt-0">
+      {/* Left Side */}
       <div className="heading md:space-y-10 space-y-5 md:w-1/2 h-full">
         <h2 className="section-heading">Contact Us</h2>
         <h3 className="md:text-5xl text-3xl font-semibold leading-snug">
@@ -81,6 +82,7 @@ function ContactUsForm() {
           <p className=" heading font-bold ml-2"> +91-9850326555</p>
         </Link>
       </div>
+       {/* Right Side */}
       <div className="md:w-1/2 md:space-y-10 space-y-7">
         <p className="secondary-text md:text-xl text-base">
           We&apos;d love to share more with you, please complete this form and
