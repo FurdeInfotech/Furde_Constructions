@@ -1,73 +1,24 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import {
-  MapPin,
-  PercentCircle,
-  ArrowLeft,
-  Download,
-  ExternalLink,
-} from "lucide-react";
+import { MapPin, PercentCircle } from "lucide-react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
 import { TextAnimate } from "@/components/magicui/text-animate";
+import { useRef, Suspense } from "react";
 import LoanCalculator from "@/components/loan-calulator";
 import { BlurFade } from "@/components/magicui/blur-fade";
+import { cn } from "@/lib/utils";
 import BanksMarquee from "@/components/banks";
-import { getGoogleMapsEmbedUrl } from "@/lib/utils";
-import { useProject, type Project } from "@/hooks/useProjects";
-import { useParams, useRouter } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import { PROJECTS, getProjectById } from "@/data/Projects";
+import { useSearchParams } from "next/navigation";
 
-export default function ProjectDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const projectId = params.id as string;
-  const { project, loading, error } = useProject(projectId);
-
-  // Loading state (no scroll/animation hooks here)
-  if (loading) {
-    return (
-      <div className="min-h-screen relative overflow-hidden flex flex-col w-full md:px-6 px-3 py-5 gap-4">
-        <div className="relative w-full h-[100vh] rounded-4xl overflow-hidden">
-          <Skeleton className="w-full h-full" />
-          <div className="absolute inset-0 z-10 flex justify-center items-center flex-col space-y-5 px-6">
-            <Skeleton className="h-12 w-64" />
-            <Skeleton className="h-6 w-48" />
-            <Skeleton className="h-4 w-32" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state (no scroll/animation hooks here)
-  if (error || !project) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">
-            Project Not Found
-          </h1>
-          <p className="text-gray-600 mb-6">
-            {error || "The requested project could not be found."}
-          </p>
-          <Button onClick={() => router.back()} variant="outline">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Go Back
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  // Only when project is available do we render the animated content
-  return <ProjectDetailContent project={project} />;
-}
-
-function ProjectDetailContent({ project }: { project: Project }) {
+function ProjectContent() {
+  // Get project ID from URL query params
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get("id") || "furde-heights";
+  const project = getProjectById(projectId) || PROJECTS[0];
+  
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: scrollContainerRef,
@@ -77,8 +28,6 @@ function ProjectDetailContent({ project }: { project: Project }) {
   const backgroundOpacity = useTransform(scrollYProgress, [0, 0.2], [0.5, 0]);
   const backdropBlur = useTransform(scrollYProgress, [0, 0.2], [12, 0]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
-
-  const coverImage = project.coverImage || "/placeholder-project.jpg";
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col w-full md:px-6 px-3 py-5 gap-4">
@@ -166,7 +115,7 @@ function ProjectDetailContent({ project }: { project: Project }) {
         </motion.div>
 
         <Image
-          src={coverImage}
+          src={project.coverImage}
           alt="Hero Image"
           fill
           className="object-cover"
@@ -238,6 +187,7 @@ function ProjectDetailContent({ project }: { project: Project }) {
       <div className="flex flex-col mt-10 px-4 max-w-full py-10">
         <h1 className="text-4xl font-bold mb-8">Project Gallery</h1>
 
+        {/* Dynamic Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {project.images.map((image, index) => (
             <BlurFade key={index} delay={0.1 + index * 0.05} inView>
@@ -251,73 +201,22 @@ function ProjectDetailContent({ project }: { project: Project }) {
         </div>
       </div>
 
-      {project.brochures && project.brochures.length > 0 && (
-        <div className="flex flex-col mt-4 px-4 max-w-full pb-10">
-          <h2 className="text-3xl font-bold mb-6">Brochures</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {project.brochures.map((brochure, index) => (
-              <BlurFade key={index} delay={0.1 + index * 0.05} inView>
-                <div className="aspect-[4/3]">
-                  <a
-                    href={brochure}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="relative overflow-hidden flex items-center gap-3 w-full h-full rounded-2xl border border-gray-200 bg-black/30 shadow-sm hover:shadow-md transition-all p-4"
-                  >
-                    <div
-                      className="absolute inset-0 bg-cover bg-center blur-sm opacity-70"
-                      style={{ backgroundImage: "url('/brochure.webp')" }}
-                    />
-                    <div className="relative flex items-center gap-3">
-                      <Download className="w-6 h-6 text-white flex-shrink-0" />
-                      <div className="text-left text-white">
-                        <p className="font-semibold">
-                          Project Brochure {index + 1}
-                        </p>
-                        <p className="text-sm text-gray-200">PDF Download</p>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-              </BlurFade>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {project.googleMapLink && (
-        <div className="flex flex-col mt-4 px-4 max-w-full pb-10 space-y-4">
-          <h2 className="text-3xl font-bold">Location Map</h2>
-          {getGoogleMapsEmbedUrl(project.googleMapLink) && (
-            <div className="aspect-video rounded-2xl overflow-hidden">
-              <iframe
-                src={getGoogleMapsEmbedUrl(project.googleMapLink)}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="rounded-2xl"
-              />
-            </div>
-          )}
-          <Button variant="outline" asChild>
-            <a
-              href={project.googleMapLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Open in Google Maps
-            </a>
-          </Button>
-        </div>
-      )}
-
       <LoanCalculator />
-      <BanksMarquee />
+       <BanksMarquee/>
     </div>
   );
 }
+
+function Page() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#CA6F1E]"></div>
+      </div>
+    }>
+      <ProjectContent />
+    </Suspense>
+  );
+}
+
+export default Page;

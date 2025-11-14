@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Menu, Images, FolderOpen, LogOut } from 'lucide-react';
-import Link from 'next/link';
-import { signOut } from 'next-auth/react';
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Menu, Images, FolderOpen, LogOut, ListChecks } from "lucide-react";
+import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -13,19 +13,24 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Sidebar({ className, ...props }: SidebarProps) {
   const menuItems = [
     {
-      title: 'Gallery',
-      href: '/dashboard/gallery',
+      title: "Gallery",
+      href: "/dashboard/gallery",
       icon: Images,
     },
     {
-      title: 'Projects',
-      href: '/dashboard/projects',
+      title: "Projects",
+      href: "/dashboard/projects",
       icon: FolderOpen,
+    },
+    {
+      title: "Inquiry Subjects",
+      href: "/dashboard/inquiry-subjects",
+      icon: ListChecks,
     },
   ];
 
   return (
-    <div className={cn('pb-12 w-64', className)} {...props}>
+    <div className={cn("pb-12 w-64", className)} {...props}>
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
@@ -34,10 +39,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
           <div className="space-y-1">
             {menuItems.map((item) => (
               <Link key={item.href} href={item.href}>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start"
-                >
+                <Button variant="ghost" className="w-full justify-start">
                   <item.icon className="mr-2 h-4 w-4" />
                   {item.title}
                 </Button>
@@ -46,7 +48,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
             <Button
               variant="ghost"
               className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
-              onClick={() => signOut({ callbackUrl: '/sign-in' })}
+              onClick={() => signOut({ callbackUrl: "/sign-in" })}
             >
               <LogOut className="mr-2 h-4 w-4" />
               Sign Out

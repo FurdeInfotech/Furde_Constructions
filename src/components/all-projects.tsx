@@ -1,20 +1,21 @@
-'use client';
+"use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { useProjects } from "@/hooks/useProjects";
+import { useProjects, Project as ProjectType } from "@/hooks/useProjects";
 import ProjectCard from "./project-card";
 import ProjectCardSkeleton from "./project-card-skeleton";
-import { Skeleton } from "./ui/skeleton";
+
+function chunkArray<T>(arr: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
 
 export default function AllProjects() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const { projects, loading, error } = useProjects();
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
 
   // Handle error state
   if (error) {
@@ -28,43 +29,8 @@ export default function AllProjects() {
     );
   }
 
-  // Calculate dynamic height based on number of projects
-  const projectCount = projects.length || 6; // Default to 6 for loading state
-  const containerHeight = `${projectCount * 100}vh`;
-
-  // Pre-calculate transforms for all projects (up to a reasonable limit)
-  const maxProjects = Math.max(projectCount, 10); // Support up to 10 projects
-  const cardTransforms = Array.from({ length: maxProjects }, (_, index) => {
-    const step = 1 / maxProjects;
-    const startProgress = index * step;
-    const endProgress = (index + 1) * step;
-    
-    const y = useTransform(
-      scrollYProgress,
-      [startProgress, endProgress, Math.min(endProgress + step, 1)],
-      [index * 80, 0, -80]
-    );
-    
-    const scale = useTransform(
-      scrollYProgress,
-      [startProgress, endProgress, Math.min(endProgress + step, 1)],
-      [0.9, 1, 0.9]
-    );
-    
-    const opacity = useTransform(
-      scrollYProgress,
-      [startProgress, endProgress, Math.min(endProgress + step, 1)],
-      [0.7, 1, 0.7]
-    );
-    
-    const zIndex = useTransform(
-      scrollYProgress,
-      [startProgress, endProgress],
-      [10, 30]
-    );
-
-    return { y, scale, opacity, zIndex };
-  });
+  const hasProjects = projects.length > 0;
+  const groups = hasProjects ? chunkArray(projects, 3) : [];
 
   return (
     <div className="w-full">
@@ -75,51 +41,32 @@ export default function AllProjects() {
         </p>
       </div>
 
-      <div ref={containerRef} className="relative" style={{ height: containerHeight }}>
-        {loading ? (
-          // Show skeleton loading for multiple cards
-          Array.from({ length: 6 }).map((_, index) => (
-            <ProjectCardSkeleton
-              key={index}
-              style={{
-                y: cardTransforms[index]?.y,
-                scale: cardTransforms[index]?.scale,
-                opacity: cardTransforms[index]?.opacity,
-                zIndex: cardTransforms[index]?.zIndex,
-              }}
-            />
-          ))
-        ) : projects.length === 0 ? (
-          // No projects state
-          <div className="sticky top-16 h-screen flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-6xl mb-4">🏗️</div>
-              <h3 className="text-2xl font-semibold mb-2">No Projects Found</h3>
-              <p className="text-gray-600">Check back later for new projects.</p>
-            </div>
+      {loading ? (
+        // One stack with skeletons while loading
+        <ProjectsStack projects={[]} loading={true} />
+      ) : !hasProjects ? (
+        // No projects state
+        <div className="sticky top-16 h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-6xl mb-4">🏗️</div>
+            <h3 className="text-2xl font-semibold mb-2">No Projects Found</h3>
+            <p className="text-gray-600">Check back later for new projects.</p>
           </div>
-        ) : (
-          // Show actual project cards
-          projects.map((project, index) => (
-            <ProjectCard
-              key={project._id}
-              project={project}
-              style={{
-                y: cardTransforms[index]?.y,
-                scale: cardTransforms[index]?.scale,
-                opacity: cardTransforms[index]?.opacity,
-                zIndex: cardTransforms[index]?.zIndex,
-              }}
-            />
-          ))
-        )}
-      </div>
+        </div>
+      ) : (
+        // Render one stacked section per group of three projects
+        groups.map((group, index) => (
+          <ProjectsStack key={index} projects={group} loading={false} />
+        ))
+      )}
 
       {/* Project Statistics */}
-      {!loading && projects.length > 0 && (
+      {!loading && hasProjects && (
         <div className="py-16 bg-gray-50 rounded-2xl mt-16">
           <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center mb-12">Our Portfolio</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">
+              Our Portfolio
+            </h2>
             <div className="grid md:grid-cols-3 gap-8 text-center">
               <div>
                 <div className="text-4xl font-bold text-[#CA6F1E] mb-2">
@@ -129,19 +76,162 @@ export default function AllProjects() {
               </div>
               <div>
                 <div className="text-4xl font-bold text-[#CA6F1E] mb-2">
-                  {projects.filter(p => p.status === 'completed').length}
+                  {projects.filter((p) => p.status === "completed").length}
                 </div>
                 <p className="text-gray-600">Completed</p>
               </div>
               <div>
                 <div className="text-4xl font-bold text-[#CA6F1E] mb-2">
-                  {projects.filter(p => p.status === 'ongoing').length}
+                  {projects.filter((p) => p.status === "ongoing").length}
                 </div>
                 <p className="text-gray-600">Ongoing</p>
               </div>
             </div>
           </div>
         </div>
+      )}
+    </div>
+  );
+}
+
+function ProjectsStack({
+  projects,
+  loading,
+}: {
+  projects: ProjectType[];
+  loading: boolean;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Exact same curves as FeaturedProjects for 3 cards
+  const card1Y = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5, 0.75],
+    [0, -80, -160, -240]
+  );
+  const card1Scale = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5, 0.75],
+    [1, 0.9, 0.8, 0.7]
+  );
+  const card1Opacity = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5, 0.75],
+    [1, 0.8, 0.6, 0.4]
+  );
+  const card1Z = useTransform(scrollYProgress, [0, 0.25], [30, 5]);
+
+  const card2Y = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    [80, 0, -80, -160, -240]
+  );
+  const card2Scale = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    [0.9, 1, 0.9, 0.8, 0.7]
+  );
+  const card2Opacity = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    [0.7, 1, 0.8, 0.6, 0.4]
+  );
+  const card2Z = useTransform(scrollYProgress, [0, 0.25, 0.5], [20, 30, 5]);
+
+  const card3Y = useTransform(
+    scrollYProgress,
+    [0, 0.5, 0.75, 1],
+    [160, 80, 0, -120]
+  );
+  const card3Scale = useTransform(
+    scrollYProgress,
+    [0, 0.5, 0.75, 1],
+    [0.8, 0.9, 1, 0.8]
+  );
+  const card3Opacity = useTransform(
+    scrollYProgress,
+    [0, 0.5, 0.75, 1],
+    [0.5, 0.7, 1, 0.6]
+  );
+  const card3Z = useTransform(
+    scrollYProgress,
+    [-1, 0.5, 1, 1],
+    [10, 30, 10, 5]
+  );
+
+  const p0 = projects[0];
+  const p1 = projects[1];
+  const p2 = projects[2];
+
+  return (
+    <div ref={containerRef} className="relative h-[400vh] md:mt-10 mt-0">
+      {loading ? (
+        <>
+          <ProjectCardSkeleton
+            style={{
+              y: card1Y,
+              scale: card1Scale,
+              opacity: card1Opacity,
+              zIndex: card1Z,
+            }}
+          />
+          <ProjectCardSkeleton
+            style={{
+              y: card2Y,
+              scale: card2Scale,
+              opacity: card2Opacity,
+              zIndex: card2Z,
+            }}
+          />
+          <ProjectCardSkeleton
+            style={{
+              y: card3Y,
+              scale: card3Scale,
+              opacity: card3Opacity,
+              zIndex: card3Z,
+            }}
+          />
+        </>
+      ) : (
+        <>
+          {p0 && (
+            <ProjectCard
+              project={p0}
+              style={{
+                y: card1Y,
+                scale: card1Scale,
+                opacity: card1Opacity,
+                zIndex: card1Z,
+              }}
+            />
+          )}
+          {p1 && (
+            <ProjectCard
+              project={p1}
+              style={{
+                y: card2Y,
+                scale: card2Scale,
+                opacity: card2Opacity,
+                zIndex: card2Z,
+              }}
+            />
+          )}
+          {p2 && (
+            <ProjectCard
+              project={p2}
+              style={{
+                y: card3Y,
+                scale: card3Scale,
+                opacity: card3Opacity,
+                zIndex: card3Z,
+              }}
+            />
+          )}
+        </>
       )}
     </div>
   );

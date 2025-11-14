@@ -7,7 +7,7 @@ import { getToken } from "next-auth/jwt";
 export async function GET() {
   try {
     await dbConnect();
-    const projects = await ProjectModel.find({}).sort({ createdAt: -1 });
+    const projects = await ProjectModel.find({}).sort({ createdAt: 1 });
     return NextResponse.json({ success: true, data: projects });
   } catch (error) {
     console.error("Error fetching projects:", error);
