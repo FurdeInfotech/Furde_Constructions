@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import { NextRequest, NextResponse } from 'next/server';
 import ContactEmailTemplate from '@/components/email-template';
 
-const resend = new Resend('re_LYavFc2n_CczT7P5egqm22hGXVLzTcio4');
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     // Send email using Resend
     const { data, error } = await resend.emails.send({
       from: 'Furde Constructions <noreply@furdeconstructions.com>',
-      to: ['furdeconstructions@gmail.com'],
+      to: ['info@furdeconstructions.com'],
       subject: `New Contact Form Submission from ${name}`,
       react: ContactEmailTemplate({ name, email, phone, inquiry }),
     });

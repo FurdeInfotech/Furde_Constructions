@@ -3,12 +3,38 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { PROJECTS } from "@/data/Projects";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { TextAnimate } from "@/components/magicui/text-animate";
 
+type GalleryTab = "projects" | "awards" | "events";
+
+interface Project {
+  _id: string;
+  name: string;
+  address: string;
+  images: string[];
+}
+
+interface Award {
+  _id: string;
+  title: string;
+  images: string[];
+}
+
+interface EventItem {
+  _id: string;
+  title: string;
+  type: string;
+  images: string[];
+}
+
 function Page() {
+  const [activeTab, setActiveTab] = useState<GalleryTab>("projects");
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [awards, setAwards] = useState<Award[]>([]);
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("All");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -25,10 +51,49 @@ function Page() {
     };
   }, [selectedImage]);
 
+  // Fetch gallery data for projects, awards, and events
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [projectsRes, awardsRes, eventsRes] = await Promise.all([
+          fetch("/api/projects"),
+          fetch("/api/awards"),
+          fetch("/api/events"),
+        ]);
+
+        const [projectsData, awardsData, eventsData] = await Promise.all([
+          projectsRes.json(),
+          awardsRes.json(),
+          eventsRes.json(),
+        ]);
+
+        if (projectsData?.success) {
+          setProjects(projectsData.data || []);
+        }
+        if (awardsData?.success) {
+          setAwards(awardsData.data || []);
+        }
+        if (eventsData?.success) {
+          setEvents(eventsData.data || []);
+        }
+      } catch (error) {
+        console.error("Error fetching gallery data:", error);
+        setProjects([]);
+        setAwards([]);
+        setEvents([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const filteredProjects =
     filter === "All"
-      ? PROJECTS
-      : PROJECTS.filter((project) => project.name === filter);
+      ? projects
+      : projects.filter((project) => project.name === filter);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50/30 to-gray-50 py-10 px-4 md:px-8 sm:pt-32 pt-28">
@@ -56,145 +121,365 @@ function Page() {
           </p>
         </motion.div>
 
-        {/* Filter Buttons */}
+        {/* Tabs: Projects / Awards / Events */}
         <motion.div
-          className="flex flex-wrap gap-3 mb-12 justify-center"
-          initial={{ opacity: 0, y: -20 }}
+          className="flex justify-center gap-3 mb-8"
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.4, delay: 0.15 }}
         >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              onClick={() => setFilter("All")}
-              variant={filter === "All" ? "default" : "outline"}
-              className={`transition-all duration-300 px-6 py-2 rounded-full ${
-                filter === "All"
-                  ? "bg-[#CA6F1E] hover:bg-[#B35F0E] text-white shadow-lg shadow-orange-200"
-                  : "hover:border-[#CA6F1E] hover:text-[#CA6F1E]"
-              }`}
-            >
-              All Projects
-            </Button>
-          </motion.div>
-          {PROJECTS.map((project) => (
+          {[
+            { id: "projects", label: "Projects" },
+            { id: "awards", label: "Awards" },
+            { id: "events", label: "Events" },
+          ].map((tab) => (
             <motion.div
-              key={project.id}
+              key={tab.id}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <Button
-                onClick={() => setFilter(project.name)}
-                variant={filter === project.name ? "default" : "outline"}
+                onClick={() => {
+                  setActiveTab(tab.id as GalleryTab);
+                  setFilter("All");
+                }}
+                variant={activeTab === tab.id ? "default" : "outline"}
                 className={`transition-all duration-300 px-6 py-2 rounded-full ${
-                  filter === project.name
+                  activeTab === tab.id
                     ? "bg-[#CA6F1E] hover:bg-[#B35F0E] text-white shadow-lg shadow-orange-200"
                     : "hover:border-[#CA6F1E] hover:text-[#CA6F1E]"
                 }`}
               >
-                {project.name}
+                {tab.label}
               </Button>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Gallery Grid */}
-        <AnimatePresence mode="wait">
+        {/* Filter Buttons for Projects tab */}
+        {activeTab === "projects" && (
           <motion.div
-            key={filter}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.4 }}
-            className="space-y-16"
+            className="flex flex-wrap gap-3 mb-12 justify-center"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
-            {filteredProjects.map((project, projectIndex) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: projectIndex * 0.1 }}
-                className="space-y-6"
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={() => setFilter("All")}
+                variant={filter === "All" ? "default" : "outline"}
+                className={`transition-all duration-300 px-6 py-2 rounded-full ${
+                  filter === "All"
+                    ? "bg-[#CA6F1E] hover:bg-[#B35F0E] text-white shadow-lg shadow-orange-200"
+                    : "hover:border-[#CA6F1E] hover:text-[#CA6F1E]"
+                }`}
               >
-                {/* Project Title */}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: projectIndex * 0.1 + 0.2 }}
-                  className="flex items-center gap-4"
+                All Projects
+              </Button>
+            </motion.div>
+            {projects.map((project) => (
+              <motion.div
+                key={project._id}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button
+                  onClick={() => setFilter(project.name)}
+                  variant={filter === project.name ? "default" : "outline"}
+                  className={`transition-all duration-300 px-6 py-2 rounded-full ${
+                    filter === project.name
+                      ? "bg-[#CA6F1E] hover:bg-[#B35F0E] text-white shadow-lg shadow-orange-200"
+                      : "hover:border-[#CA6F1E] hover:text-[#CA6F1E]"
+                  }`}
                 >
-                  <div className="h-1 w-12 bg-gradient-to-r from-[#CA6F1E] to-orange-300 rounded-full"></div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-                    {project.name}
-                  </h2>
-                  <div className="h-1 flex-1 bg-gradient-to-r from-orange-300 to-transparent rounded-full"></div>
-                </motion.div>
-
-                {/* Project Info */}
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: projectIndex * 0.1 + 0.3 }}
-                  className="text-gray-600 max-w-3xl"
-                >
-                  {project.address}
-                </motion.p>
-
-                {/* Images Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {project.images.map((image, imageIndex) => (
-                    <motion.div
-                      key={imageIndex}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{
-                        duration: 0.4,
-                        delay: projectIndex * 0.1 + imageIndex * 0.05,
-                      }}
-                      whileHover={{ scale: 1.05, y: -8 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="relative aspect-square overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
-                      onClick={() => setSelectedImage(image)}
-                    >
-                      {/* Image */}
-                      <Image
-                        src={image}
-                        alt={`${project.name} ${imageIndex + 1}`}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      />
-
-                      {/* Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="absolute bottom-4 left-4 text-white">
-                          <p className="text-sm font-semibold">
-                            {project.name}
-                          </p>
-                          <p className="text-xs opacity-80">
-                            View Image {imageIndex + 1}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Border glow effect */}
-                      <div className="absolute inset-0 rounded-2xl ring-2 ring-transparent group-hover:ring-[#CA6F1E] transition-all duration-300"></div>
-                    </motion.div>
-                  ))}
-                </div>
+                  {project.name}
+                </Button>
               </motion.div>
             ))}
           </motion.div>
-        </AnimatePresence>
+        )}
 
-        {/* Empty State */}
-        {filteredProjects.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20"
-          >
-            <p className="text-gray-500 text-xl">No projects found</p>
-          </motion.div>
+        {/* Gallery Grids */}
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-900"></div>
+          </div>
+        ) : (
+          <>
+            {activeTab === "projects" && (
+              <>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={filter}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.4 }}
+                    className="space-y-16"
+                  >
+                    {filteredProjects.map((project, projectIndex) => (
+                      <motion.div
+                        key={project._id}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: projectIndex * 0.1,
+                        }}
+                        className="space-y-6"
+                      >
+                        {/* Project Title */}
+                        <motion.div
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: projectIndex * 0.1 + 0.2 }}
+                          className="flex items-center gap-4"
+                        >
+                          <div className="h-1 w-12 bg-gradient-to-r from-[#CA6F1E] to-orange-300 rounded-full"></div>
+                          <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+                            {project.name}
+                          </h2>
+                          <div className="h-1 flex-1 bg-gradient-to-r from-orange-300 to-transparent rounded-full"></div>
+                        </motion.div>
+
+                        {/* Project Info */}
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: projectIndex * 0.1 + 0.3 }}
+                          className="text-gray-600 max-w-3xl"
+                        >
+                          {project.address}
+                        </motion.p>
+
+                        {/* Images Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                          {project.images.map((image, imageIndex) => (
+                            <motion.div
+                              key={imageIndex}
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{
+                                duration: 0.4,
+                                delay: projectIndex * 0.1 + imageIndex * 0.05,
+                              }}
+                              whileHover={{ scale: 1.05, y: -8 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="relative aspect-square overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
+                              onClick={() => setSelectedImage(image)}
+                            >
+                              <Image
+                                src={image}
+                                alt={`${project.name} ${imageIndex + 1}`}
+                                fill
+                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                              />
+
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="absolute bottom-4 left-4 text-white">
+                                  <p className="text-sm font-semibold">
+                                    {project.name}
+                                  </p>
+                                  <p className="text-xs opacity-80">
+                                    View Image {imageIndex + 1}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="absolute inset-0 rounded-2xl ring-2 ring-transparent group-hover:ring-[#CA6F1E] transition-all duration-300"></div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
+
+                {filteredProjects.length === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center py-20"
+                  >
+                    <p className="text-gray-500 text-xl">No projects found</p>
+                  </motion.div>
+                )}
+              </>
+            )}
+
+            {activeTab === "awards" && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key="awards"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-16"
+                >
+                  {awards.map((award, awardIndex) => (
+                    <motion.div
+                      key={award._id}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: awardIndex * 0.1 }}
+                      className="space-y-6"
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: awardIndex * 0.1 + 0.2 }}
+                        className="flex items-center gap-4"
+                      >
+                        <div className="h-1 w-12 bg-gradient-to-r from-[#CA6F1E] to-orange-300 rounded-full"></div>
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+                          {award.title}
+                        </h2>
+                        <div className="h-1 flex-1 bg-gradient-to-r from-orange-300 to-transparent rounded-full"></div>
+                      </motion.div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {award.images.map((image, imageIndex) => (
+                          <motion.div
+                            key={imageIndex}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{
+                              duration: 0.4,
+                              delay: awardIndex * 0.1 + imageIndex * 0.05,
+                            }}
+                            whileHover={{ scale: 1.05, y: -8 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="relative aspect-square overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
+                            onClick={() => setSelectedImage(image)}
+                          >
+                            <Image
+                              src={image}
+                              alt={`${award.title} ${imageIndex + 1}`}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            />
+
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="absolute bottom-4 left-4 text-white">
+                                <p className="text-sm font-semibold">
+                                  {award.title}
+                                </p>
+                                <p className="text-xs opacity-80">
+                                  View Image {imageIndex + 1}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="absolute inset-0 rounded-2xl ring-2 ring-transparent group-hover:ring-[#CA6F1E] transition-all duration-300"></div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  ))}
+
+                  {awards.length === 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center py-20"
+                    >
+                      <p className="text-gray-500 text-xl">No awards found</p>
+                    </motion.div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            )}
+
+            {activeTab === "events" && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key="events"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-16"
+                >
+                  {events.map((event, eventIndex) => (
+                    <motion.div
+                      key={event._id}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: eventIndex * 0.1 }}
+                      className="space-y-6"
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: eventIndex * 0.1 + 0.2 }}
+                        className="flex items-center gap-4"
+                      >
+                        <div className="h-1 w-12 bg-gradient-to-r from-[#CA6F1E] to-orange-300 rounded-full"></div>
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+                          {event.title}
+                        </h2>
+                        <div className="h-1 flex-1 bg-gradient-to-r from-orange-300 to-transparent rounded-full"></div>
+                      </motion.div>
+
+                      <p className="text-gray-600 max-w-3xl">{event.type}</p>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {event.images.map((image, imageIndex) => (
+                          <motion.div
+                            key={imageIndex}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{
+                              duration: 0.4,
+                              delay: eventIndex * 0.1 + imageIndex * 0.05,
+                            }}
+                            whileHover={{ scale: 1.05, y: -8 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="relative aspect-square overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
+                            onClick={() => setSelectedImage(image)}
+                          >
+                            <Image
+                              src={image}
+                              alt={`${event.title} ${imageIndex + 1}`}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            />
+
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="absolute bottom-4 left-4 text-white">
+                                <p className="text-sm font-semibold">
+                                  {event.title}
+                                </p>
+                                <p className="text-xs opacity-80">
+                                  View Image {imageIndex + 1}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="absolute inset-0 rounded-2xl ring-2 ring-transparent group-hover:ring-[#CA6F1E] transition-all duration-300"></div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  ))}
+
+                  {events.length === 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center py-20"
+                    >
+                      <p className="text-gray-500 text-xl">No events found</p>
+                    </motion.div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            )}
+          </>
         )}
       </div>
 

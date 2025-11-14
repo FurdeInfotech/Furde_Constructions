@@ -2,11 +2,25 @@
 
 import { Phone, Loader2, CheckCircle } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
-import  AnimatedArrowButton, { EnhancedAnimatedButton }  from "./ui/animated-button";
+import AnimatedArrowButton, {
+  EnhancedAnimatedButton,
+} from "./ui/animated-button";
 
-function ContactUsForm() {
+type ContactUsFormMode = "default" | "brochure";
+
+interface ContactUsFormProps {
+  mode?: ContactUsFormMode;
+  onSuccess?: (data: {
+    name: string;
+    email: string;
+    phone: string;
+    inquiry: string;
+  }) => void;
+}
+
+function ContactUsForm({ mode = "default", onSuccess }: ContactUsFormProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,10 +33,42 @@ function ContactUsForm() {
     message: string;
   }>({ type: null, message: "" });
 
+  interface InquirySubject {
+    _id: string;
+    name: string;
+  }
+
+  const [subjects, setSubjects] = useState<InquirySubject[]>([]);
+  const [subjectsLoading, setSubjectsLoading] = useState(false);
+  const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  // Fetch inquiry subjects for dynamic dropdown
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      try {
+        setSubjectsLoading(true);
+        const res = await fetch("/api/inquiry-subjects");
+        const data = await res.json();
+        if (data?.success) {
+          setSubjects(data.data || []);
+        } else {
+          setSubjects([]);
+        }
+      } catch (error) {
+        console.error("Error fetching inquiry subjects:", error);
+        setSubjects([]);
+      } finally {
+        setSubjectsLoading(false);
+      }
+    };
+
+    fetchSubjects();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,8 +89,28 @@ function ContactUsForm() {
       if (response.ok) {
         setStatus({
           type: "success",
-          message: "Thank you! We'll get back to you shortly.",
+          message:
+            mode === "brochure"
+              ? "Form submitted! Your brochure download is unlocking..."
+              : "Thank you! We'll get back to you shortly.",
         });
+
+        if (mode === "brochure") {
+          try {
+            if (typeof window !== "undefined") {
+              window.localStorage.setItem(
+                "brochure_contact_info",
+                JSON.stringify(formData)
+              );
+              window.localStorage.setItem("brochure_unlocked", "true");
+            }
+          } catch (err) {
+            console.error("Error saving brochure contact info:", err);
+          }
+        }
+
+        onSuccess?.(formData);
+
         setFormData({ name: "", email: "", phone: "", inquiry: "" });
       } else {
         setStatus({
@@ -66,9 +132,13 @@ function ContactUsForm() {
     <div className="flex md:flex-row md:gap-4 gap-10 flex-col items-stretch md:px-10 px-5 md:py-10 py-5 md:mt-12 mt-0">
       {/* Left Side */}
       <div className="heading md:space-y-10 space-y-5 md:w-1/2 h-full">
-        <h2 className="section-heading">Contact Us</h2>
+        <h2 className="section-heading">
+          {mode === "brochure" ? "Unlock Brochure" : "Contact Us"}
+        </h2>
         <h3 className="md:text-5xl text-3xl font-semibold leading-snug">
-          We&apos;d love to hear from you
+          {mode === "brochure"
+            ? "Fill in your details to unlock the brochure download"
+            : "We'd love to hear from you"}
         </h3>
         <Link
           href={"tel:+919850326555"}
@@ -82,11 +152,12 @@ function ContactUsForm() {
           <p className=" heading font-bold ml-2"> +91-9850326555</p>
         </Link>
       </div>
-       {/* Right Side */}
+      {/* Right Side */}
       <div className="md:w-1/2 md:space-y-10 space-y-7">
         <p className="secondary-text md:text-xl text-base">
-          We&apos;d love to share more with you, please complete this form and
-          our dedicated team will get back to you shortly.
+          {mode === "brochure"
+            ? "Complete this form once to unlock and download all project brochures."
+            : "We'd love to share more with you, please complete this form and our dedicated team will get back to you shortly."}
         </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className=" grid grid-cols-2 gap-x-4 gap-y-4">
@@ -119,17 +190,52 @@ function ContactUsForm() {
               className="h-12 rounded-full placeholder:secondary-text text-lg bg-[#EFEFEF]"
               placeholder="Phone*"
             />
-            <Input
-              name="inquiry"
-              value={formData.inquiry}
-              onChange={handleChange}
-              required
-              disabled={isLoading}
-              className="h-12 rounded-full placeholder:secondary-text text-lg bg-[#EFEFEF]"
-              placeholder="Inquiry About*"
-            />
+            <div className="relative">
+              <Input
+                name="inquiry"
+                value={formData.inquiry}
+                onChange={(e) => {
+                  handleChange(e);
+                  setShowSubjectDropdown(true);
+                }}
+                onFocus={() => setShowSubjectDropdown(true)}
+                required
+                disabled={isLoading}
+                className="h-12 rounded-full placeholder:secondary-text text-lg bg-[#EFEFEF]"
+                placeholder="Inquiry About*"
+                autoComplete="off"
+              />
+              {showSubjectDropdown &&
+                !subjectsLoading &&
+                subjects.length > 0 && (
+                  <div className="absolute z-20 mt-1 w-full max-h-60 overflow-auto bg-white rounded-2xl shadow-lg border border-gray-200">
+                    {subjects
+                      .filter((subject) =>
+                        subject.name
+                          .toLowerCase()
+                          .includes(formData.inquiry.toLowerCase())
+                      )
+                      .map((subject) => (
+                        <button
+                          key={subject._id}
+                          type="button"
+                          className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                          onClick={() => {
+                            setFormData((prev) => ({
+                              ...prev,
+                              inquiry: subject.name,
+                            }));
+                            setShowSubjectDropdown(false);
+                          }}
+                        >
+                          {subject.name}
+                        </button>
+                      ))}
+                  </div>
+                )}
+            </div>
           </div>
-          
+
           {status.type && (
             <div
               className={`p-4 rounded-lg flex items-center gap-2 ${
@@ -147,14 +253,20 @@ function ContactUsForm() {
 
           <div className=" flex md:flex-row flex-col justify-between md:items-center md:gap-0 gap-5">
             <p className="secondary-text md:text-xl text-base">
-              We&apos;re excited to connect with you! <br />Required fields are marked *
+              {mode === "brochure"
+                ? "Submit the form once to unlock all brochure downloads. Required fields are marked *."
+                : "We're excited to connect with you! <br />Required fields are marked *"}
             </p>
             <div className=" flex md:justify-normal justify-end">
-              <EnhancedAnimatedButton 
-                type="submit" 
-               
-                icon={isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <></>} 
-             
+              <EnhancedAnimatedButton
+                type="submit"
+                icon={
+                  isLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <></>
+                  )
+                }
                 disabled={isLoading}
               >
                 {isLoading ? "Submitting..." : "Submit"}

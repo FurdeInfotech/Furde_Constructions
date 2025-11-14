@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TextAnimate } from "@/components/magicui/text-animate";
 import LoanCalculator from "@/components/loan-calulator";
 import { BlurFade } from "@/components/magicui/blur-fade";
@@ -20,6 +20,13 @@ import { useProject, type Project } from "@/hooks/useProjects";
 import { useParams, useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import ContactUsForm from "@/components/contact-us-form";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -69,6 +76,11 @@ export default function ProjectDetailPage() {
 
 function ProjectDetailContent({ project }: { project: Project }) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [brochuresUnlocked, setBrochuresUnlocked] = useState(false);
+  const [brochureDialogOpen, setBrochureDialogOpen] = useState(false);
+  const [pendingBrochureUrl, setPendingBrochureUrl] = useState<string | null>(
+    null
+  );
   const { scrollYProgress } = useScroll({
     target: scrollContainerRef,
     offset: ["start start", "end start"],
@@ -79,6 +91,42 @@ function ProjectDetailContent({ project }: { project: Project }) {
   const textOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
 
   const coverImage = project.coverImage || "/placeholder-project.jpg";
+
+  // Check localStorage on mount to see if brochures are already unlocked
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const unlocked = window.localStorage.getItem("brochure_unlocked");
+    setBrochuresUnlocked(unlocked === "true");
+  }, []);
+
+  const handleBrochureClick = (brochureUrl: string) => {
+    if (brochuresUnlocked) {
+      // Direct download when already unlocked
+      if (typeof window !== "undefined") {
+        window.open(brochureUrl, "_blank");
+      }
+      return;
+    }
+
+    // First time: open dialog and store which brochure was requested
+    setPendingBrochureUrl(brochureUrl);
+    setBrochureDialogOpen(true);
+  };
+
+  const handleBrochureFormSuccess = () => {
+    setBrochuresUnlocked(true);
+
+    if (pendingBrochureUrl && typeof window !== "undefined") {
+      // Trigger the originally requested brochure download
+      window.open(pendingBrochureUrl, "_blank");
+    }
+
+    // Close dialog after a short delay to let user see success message briefly
+    setTimeout(() => {
+      setBrochureDialogOpen(false);
+      setPendingBrochureUrl(null);
+    }, 800);
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col w-full md:px-6 px-3 py-5 gap-4">
@@ -238,7 +286,7 @@ function ProjectDetailContent({ project }: { project: Project }) {
       <div className="flex flex-col mt-10 px-4 max-w-full py-10">
         <h1 className="text-4xl font-bold mb-8">Project Gallery</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
           {project.images.map((image, index) => (
             <BlurFade key={index} delay={0.1 + index * 0.05} inView>
               <img
@@ -253,35 +301,60 @@ function ProjectDetailContent({ project }: { project: Project }) {
 
       {project.brochures && project.brochures.length > 0 && (
         <div className="flex flex-col mt-4 px-4 max-w-full pb-10">
-          <h2 className="text-3xl font-bold mb-6">Brochures</h2>
+          <h2 className="text-3xl font-bold mb-2">Brochures</h2>
+          <p className="text-sm text-gray-600 mb-4">
+            {brochuresUnlocked
+              ? "Click any brochure to download the PDF."
+              : "Fill the form once to unlock and download all brochures for this project."}
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {project.brochures.map((brochure, index) => (
               <BlurFade key={index} delay={0.1 + index * 0.05} inView>
-                <div className="aspect-[4/3]">
-                  <a
-                    href={brochure}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="relative overflow-hidden flex items-center gap-3 w-full h-full rounded-2xl border border-gray-200 bg-black/30 shadow-sm hover:shadow-md transition-all p-4"
-                  >
-                    <div
-                      className="absolute inset-0 bg-cover bg-center blur-sm opacity-70"
-                      style={{ backgroundImage: "url('/brochure.webp')" }}
-                    />
-                    <div className="relative flex items-center gap-3">
-                      <Download className="w-6 h-6 text-white flex-shrink-0" />
-                      <div className="text-left text-white">
-                        <p className="font-semibold">
-                          Project Brochure {index + 1}
-                        </p>
-                        <p className="text-sm text-gray-200">PDF Download</p>
+                <button
+                  type="button"
+                  onClick={() => handleBrochureClick(brochure)}
+                  className="w-full h-full"
+                >
+                  <div className="aspect-[4/3]">
+                    <div className="relative overflow-hidden flex items-center gap-3 w-full h-full rounded-2xl border border-gray-200 bg-black/70 shadow-sm hover:shadow-md transition-all p-4">
+                      <div
+                        className="absolute inset-0 bg-cover bg-center blur-sm opacity-30"
+                        style={{ backgroundImage: "url('/brochure.webp')" }}
+                      />
+                      <div className="relative flex items-center gap-3">
+                        <Download className="w-6 h-6 text-white flex-shrink-0" />
+                        <div className="text-left text-white">
+                          <p className="font-semibold">
+                            Project Brochure {index + 1}
+                          </p>
+                          <p className="text-sm text-gray-200">
+                            {brochuresUnlocked
+                              ? "PDF Download"
+                              : "Click to unlock & download"}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </a>
-                </div>
+                  </div>
+                </button>
               </BlurFade>
             ))}
           </div>
+
+          <Dialog
+            open={brochureDialogOpen}
+            onOpenChange={setBrochureDialogOpen}
+          >
+            <DialogContent className="max-w-3xl">
+              <DialogHeader>
+                <DialogTitle>Unlock Project Brochure</DialogTitle>
+              </DialogHeader>
+              <ContactUsForm
+                mode="brochure"
+                onSuccess={handleBrochureFormSuccess}
+              />
+            </DialogContent>
+          </Dialog>
         </div>
       )}
 
