@@ -86,8 +86,8 @@ function Footer() {
                 ))}
               </div>
 
-              <div className="py-2 px-5 grid grid-cols-1 font-semibold heading md:space-y-0 space-y-4">
-                <div className=" md:flex-row flex flex-col md:gap-4 gap-7">
+              <div className="py-2 px-5 grid grid-cols-1 font-semibold heading lg:space-y-0 space-y-4">
+                <div className=" lg:flex-row flex flex-col lg:gap-4 gap-7">
                   <Link
                     href={"tel:+919850326555"}
                     target="_blank"
@@ -110,10 +110,14 @@ function Footer() {
                   href={"mailto:furdeconstructions@gmail.com"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex  gap-2 md:text-xl text-neutral-700 hover:text-black"
+                  className="flex flex-row items-center gap-2 break-all flex-wrap md:text-xl text-neutral-700 hover:text-black"
                 >
-                  <Mail className=" mt-1" /> furdeconstructions@gmail.com
+                  <Mail className="mt-1" />
+                  <span className="">
+                    furdeconstructions@gmail.com
+                  </span>
                 </Link>
+
                 <Link
                   href={"https://maps.app.goo.gl/sy1Q4Wi4ozJ1vLaD7"}
                   target="_blank"
