@@ -1,17 +1,25 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { MapPin, PercentCircle, ArrowLeft, Download, ExternalLink, Lock, Unlock } from 'lucide-react';
+import {
+  MapPin,
+  PercentCircle,
+  ArrowLeft,
+  Download,
+  ExternalLink,
+  Lock,
+  Unlock,
+} from "lucide-react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { TextAnimate } from "@/components/magicui/text-animate";
 import LoanCalculator from "@/components/loan-calulator";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import BanksMarquee from "@/components/banks";
 import { getGoogleMapsEmbedUrl } from "@/lib/utils";
 import { useProject, type Project } from "@/hooks/useProjects";
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import ContactUsForm from "@/components/contact-us-form";
@@ -22,6 +30,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import MahaRera from "@/components/maha-rera";
+import { GoogleMapSection } from "@/components/google-map-section";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -104,7 +113,7 @@ function ProjectDetailContent({ project }: { project: Project }) {
 
   const handleBrochureFormSuccess = () => {
     setBrochuresUnlocked(true);
-    
+
     if (typeof window !== "undefined") {
       window.localStorage.setItem("brochure_unlocked", "true");
     }
@@ -354,37 +363,12 @@ function ProjectDetailContent({ project }: { project: Project }) {
       )}
 
       {project.googleMapLink && (
-        <div className="flex flex-col mt-4 px-4 max-w-full pb-10 space-y-4">
-          <h2 className="text-3xl font-bold">Location Map</h2>
-          {getGoogleMapsEmbedUrl(project.googleMapLink) && (
-            <div className="aspect-video rounded-2xl overflow-hidden">
-              <iframe
-                src={getGoogleMapsEmbedUrl(project.googleMapLink)}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="rounded-2xl"
-              />
-            </div>
-          )}
-          <Button variant="outline" asChild>
-            <a
-              href={project.googleMapLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Open in Google Maps
-            </a>
-          </Button>
-        </div>
+        <GoogleMapSection googleMapLink={project.googleMapLink} />
       )}
 
-      { project.name === "Furde Heights" ? <MahaRera/> : <></>}
+      {/* Google Map Section */}
+
+      {project.name === "Furde Heights" ? <MahaRera /> : <></>}
 
       <LoanCalculator />
       <BanksMarquee />

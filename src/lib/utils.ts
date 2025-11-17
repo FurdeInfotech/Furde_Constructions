@@ -5,13 +5,34 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getGoogleMapsEmbedUrl(url: string): string {
+export async function getGoogleMapsEmbedUrl(url: string): Promise<string> {
   if (!url) return "";
-  // Only trust explicit embed URLs to avoid X-Frame-Options issues
-  if (url.includes("/maps/embed?")) {
-    return url;
+
+  try {
+    // Get final URL by expanding short links on the server
+    const res = await fetch("/api/expand-map", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+
+    const data = await res.json();
+    const finalUrl = data.finalUrl || url;
+
+    // Extract @lat,lng from final URL
+    const match = finalUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+
+    if (match) {
+      const lat = match[1];
+      const lng = match[2];
+
+      // Use safe embed URL that never fails
+      return `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+    }
+
+    return "";
+  } catch (err) {
+    console.error(err);
+    return "";
   }
-  // For regular Google Maps links we don't attempt to transform them,
-  // as they often can't be safely iframed.
-  return "";
 }
