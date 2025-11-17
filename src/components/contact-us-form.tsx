@@ -257,7 +257,7 @@ function ContactUsForm({ mode = "default", onSuccess }: ContactUsFormProps) {
                 "Submit the form once to unlock all brochure downloads. Required fields are marked *."
               ) : (
                 <>
-                  We're excited to connect with you! <br />
+                  We&apos;re excited to connect with you! <br />
                   Required fields are marked *
                 </>
               )}
