@@ -56,31 +56,33 @@ function Page() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [projectsRes, awardsRes,
-          //  eventsRes
+        const [projectsRes, 
+          // awardsRes,
+           eventsRes
           ] = await Promise.all([
           fetch("/api/projects"),
-          // fetch("/api/awards"),
+          fetch("/api/awards"),
           fetch("/api/events"),
         ]);
 
-        const [projectsData, awardsData, 
-          // eventsData
+        const [projectsData, 
+          // awardsData, 
+          eventsData
         ] = await Promise.all([
           projectsRes.json(),
-          awardsRes.json(),
-          // eventsRes.json(),
+          // awardsRes.json(),
+          eventsRes.json(),
         ]);
 
         if (projectsData?.success) {
           setProjects(projectsData.data || []);
         }
-        if (awardsData?.success) {
-          setAwards(awardsData.data || []);
-        }
-        // if (eventsData?.success) {
-        //   setEvents(eventsData.data || []);
+        // if (awardsData?.success) {
+        //   setAwards(awardsData.data || []);
         // }
+        if (eventsData?.success) {
+          setEvents(eventsData.data || []);
+        }
       } catch (error) {
         console.error("Error fetching gallery data:", error);
         setProjects([]);
