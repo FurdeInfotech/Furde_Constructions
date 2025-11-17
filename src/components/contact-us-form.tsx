@@ -1,12 +1,13 @@
 "use client";
 
-import { Phone, Loader2, CheckCircle } from "lucide-react";
+import { CheckCircle, Loader2, Phone, X } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Input } from "./ui/input";
-import AnimatedArrowButton, {
-  EnhancedAnimatedButton,
-} from "./ui/animated-button";
+import { cn } from "@/lib/utils";
+import { EnhancedAnimatedButton } from "./ui/animated-button";
+import { useInDialog } from "@/hooks/use-in-dialog";
+import confetti from "canvas-confetti";
 
 type ContactUsFormMode = "default" | "brochure";
 
@@ -21,6 +22,8 @@ interface ContactUsFormProps {
 }
 
 function ContactUsForm({ mode = "default", onSuccess }: ContactUsFormProps) {
+  const isInDialog = useInDialog();
+  const formRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -128,14 +131,56 @@ function ContactUsForm({ mode = "default", onSuccess }: ContactUsFormProps) {
     }
   };
 
+  // Trigger confetti effect
+  const triggerConfetti = () => {
+    const rect = formRef.current?.getBoundingClientRect();
+    const x = rect ? (rect.left + rect.width / 2) / window.innerWidth : 0.5;
+    const y = rect ? (rect.top + 100) / window.innerHeight : 0.5;
+
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { x, y },
+      colors: ["#71BD5A", "#4CAF50", "#8BC34A", "#CDDC39"],
+    });
+  };
+
+  // Handle success effect
+  useEffect(() => {
+    if (status.type === "success") {
+      triggerConfetti();
+    }
+  }, [status.type]);
+
   return (
-    <div className="flex md:flex-row md:gap-4 gap-10 flex-col items-stretch md:px-10 px-5 md:py-10 py-5 md:mt-12 mt-0">
+    <div
+      ref={formRef}
+      className={cn(
+        "flex flex-col items-stretch px-5 py-5",
+        isInDialog
+          ? "md:px-6 md:py-6 max-h-[80vh] overflow-y-auto"
+          : "md:px-10 md:py-10 md:mt-12",
+        "md:flex-row md:gap-6 gap-6"
+      )}
+    >
       {/* Left Side */}
-      <div className="heading md:space-y-10 space-y-5 md:w-1/2 h-full">
+      <div
+        className={cn(
+          "heading space-y-5",
+          isInDialog ? "md:space-y-6" : "md:space-y-10",
+          isInDialog ? "md:w-2/5" : "md:w-1/2",
+          "h-full"
+        )}
+      >
         <h2 className="section-heading">
           {mode === "brochure" ? "Unlock Brochure" : "Contact Us"}
         </h2>
-        <h3 className="md:text-5xl text-3xl font-semibold leading-snug">
+        <h3
+          className={cn(
+            "font-semibold leading-snug",
+            isInDialog ? "text-2xl md:text-3xl" : "text-3xl md:text-5xl"
+          )}
+        >
           {mode === "brochure"
             ? "Fill in your details to unlock the brochure download"
             : "We'd love to hear from you"}
@@ -153,21 +198,35 @@ function ContactUsForm({ mode = "default", onSuccess }: ContactUsFormProps) {
         </Link>
       </div>
       {/* Right Side */}
-      <div className="md:w-1/2 md:space-y-10 space-y-7">
+      <div
+        className={cn(
+          "space-y-7",
+          isInDialog ? "md:space-y-6" : "md:space-y-10",
+          isInDialog ? "md:w-3/5" : "md:w-1/2"
+        )}
+      >
         <p className="secondary-text md:text-xl text-base">
           {mode === "brochure"
             ? "Complete this form once to unlock and download all project brochures."
             : "We'd love to share more with you, please complete this form and our dedicated team will get back to you shortly."}
         </p>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className=" grid grid-cols-2 gap-x-4 gap-y-4">
+          <div
+            className={cn(
+              "grid gap-x-4 gap-y-4",
+              isInDialog ? "grid-cols-1" : "grid-cols-2"
+            )}
+          >
             <Input
               name="name"
               value={formData.name}
               onChange={handleChange}
               required
               disabled={isLoading}
-              className="h-12 rounded-full placeholder:secondary-text text-lg bg-[#EFEFEF]"
+              className={cn(
+                "rounded-full placeholder:secondary-text bg-[#EFEFEF]",
+                isInDialog ? "h-10 text-sm" : "h-12 text-lg"
+              )}
               placeholder="Your Name*"
             />
             <Input
@@ -177,7 +236,10 @@ function ContactUsForm({ mode = "default", onSuccess }: ContactUsFormProps) {
               onChange={handleChange}
               required
               disabled={isLoading}
-              className="h-12 rounded-full placeholder:secondary-text text-lg bg-[#EFEFEF]"
+              className={cn(
+                "rounded-full placeholder:secondary-text bg-[#EFEFEF]",
+                isInDialog ? "h-10 text-sm" : "h-12 text-lg"
+              )}
               placeholder="Email*"
             />
             <Input
@@ -187,7 +249,10 @@ function ContactUsForm({ mode = "default", onSuccess }: ContactUsFormProps) {
               onChange={handleChange}
               required
               disabled={isLoading}
-              className="h-12 rounded-full placeholder:secondary-text text-lg bg-[#EFEFEF]"
+              className={cn(
+                "rounded-full placeholder:secondary-text bg-[#EFEFEF]",
+                isInDialog ? "h-10 text-sm" : "h-12 text-lg"
+              )}
               placeholder="Phone*"
             />
             <div className="relative">
@@ -201,7 +266,10 @@ function ContactUsForm({ mode = "default", onSuccess }: ContactUsFormProps) {
                 onFocus={() => setShowSubjectDropdown(true)}
                 required
                 disabled={isLoading}
-                className="h-12 rounded-full placeholder:secondary-text text-lg bg-[#EFEFEF]"
+                className={cn(
+                  "rounded-full placeholder:secondary-text bg-[#EFEFEF]",
+                  isInDialog ? "h-10 text-sm" : "h-12 text-lg"
+                )}
                 placeholder="Inquiry About*"
                 autoComplete="off"
               />
@@ -251,8 +319,20 @@ function ContactUsForm({ mode = "default", onSuccess }: ContactUsFormProps) {
             </div>
           )}
 
-          <div className=" flex md:flex-row flex-col justify-between md:items-center md:gap-0 gap-5">
-            <p className="secondary-text md:text-xl text-base">
+          <div
+            className={cn(
+              "flex flex-col gap-5 justify-between",
+              isInDialog
+                ? "md:flex-col"
+                : "md:flex-row md:items-center md:gap-0"
+            )}
+          >
+            <p
+              className={cn(
+                "secondary-text",
+                isInDialog ? "text-sm md:text-base" : "text-base md:text-xl"
+              )}
+            >
               {mode === "brochure" ? (
                 "Submit the form once to unlock all brochure downloads. Required fields are marked *."
               ) : (

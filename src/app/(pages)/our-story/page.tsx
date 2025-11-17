@@ -37,7 +37,7 @@ function page() {
             Furde Constructions is a trusted name in the construction industry
             in and around Solapur, with a legacy dating back to 1989. We empower
             individuals to elevate their lifestyles through thoughtfully
-            designed spaces that go beyond the ordinary. With over 25 landmark
+            designed spaces that go beyond the ordinary. With over 30 landmark
             projects completed over three decades, we focus not just on building
             homes but on fostering vibrant, thriving communities. Our commitment
             is to deliver more than structures — we build hope, aspirations, and

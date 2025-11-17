@@ -161,7 +161,7 @@ export default function Home() {
         <div className="md:w-1/2">
           <p className="secondary-text md:text-xl text-base">
             Furde Constructions, established in 1989, is a recognized name in
-            the Solapur regions real estate sector. With over 25 completed
+            the Solapur regions real estate sector. With over 30 completed
             projects, the firm maintains a strong presence in residential
             development. Its focus is on delivering high-quality housing
             solutions designed to enhance urban living. The company aims to

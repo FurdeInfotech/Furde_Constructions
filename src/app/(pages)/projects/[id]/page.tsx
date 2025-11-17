@@ -1,13 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import {
-  MapPin,
-  PercentCircle,
-  ArrowLeft,
-  Download,
-  ExternalLink,
-} from "lucide-react";
+import { MapPin, PercentCircle, ArrowLeft, Download, ExternalLink, Lock, Unlock } from 'lucide-react';
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
@@ -17,7 +11,7 @@ import { BlurFade } from "@/components/magicui/blur-fade";
 import BanksMarquee from "@/components/banks";
 import { getGoogleMapsEmbedUrl } from "@/lib/utils";
 import { useProject, type Project } from "@/hooks/useProjects";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from 'next/navigation';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import ContactUsForm from "@/components/contact-us-form";
@@ -27,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import MahaRera from "@/components/maha-rera";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -34,7 +29,6 @@ export default function ProjectDetailPage() {
   const projectId = params.id as string;
   const { project, loading, error } = useProject(projectId);
 
-  // Loading state (no scroll/animation hooks here)
   if (loading) {
     return (
       <div className="min-h-screen relative overflow-hidden flex flex-col w-full md:px-6 px-3 py-5 gap-4">
@@ -50,7 +44,6 @@ export default function ProjectDetailPage() {
     );
   }
 
-  // Error state (no scroll/animation hooks here)
   if (error || !project) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -70,7 +63,6 @@ export default function ProjectDetailPage() {
     );
   }
 
-  // Only when project is available do we render the animated content
   return <ProjectDetailContent project={project} />;
 }
 
@@ -92,7 +84,6 @@ function ProjectDetailContent({ project }: { project: Project }) {
 
   const coverImage = project.coverImage || "/placeholder-project.jpg";
 
-  // Check localStorage on mount to see if brochures are already unlocked
   useEffect(() => {
     if (typeof window === "undefined") return;
     const unlocked = window.localStorage.getItem("brochure_unlocked");
@@ -101,27 +92,27 @@ function ProjectDetailContent({ project }: { project: Project }) {
 
   const handleBrochureClick = (brochureUrl: string) => {
     if (brochuresUnlocked) {
-      // Direct download when already unlocked
       if (typeof window !== "undefined") {
         window.open(brochureUrl, "_blank");
       }
       return;
     }
 
-    // First time: open dialog and store which brochure was requested
     setPendingBrochureUrl(brochureUrl);
     setBrochureDialogOpen(true);
   };
 
   const handleBrochureFormSuccess = () => {
     setBrochuresUnlocked(true);
+    
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("brochure_unlocked", "true");
+    }
 
     if (pendingBrochureUrl && typeof window !== "undefined") {
-      // Trigger the originally requested brochure download
       window.open(pendingBrochureUrl, "_blank");
     }
 
-    // Close dialog after a short delay to let user see success message briefly
     setTimeout(() => {
       setBrochureDialogOpen(false);
       setPendingBrochureUrl(null);
@@ -214,7 +205,7 @@ function ProjectDetailContent({ project }: { project: Project }) {
         </motion.div>
 
         <Image
-          src={coverImage}
+          src={coverImage || "/placeholder.svg"}
           alt="Hero Image"
           fill
           className="object-cover"
@@ -321,15 +312,19 @@ function ProjectDetailContent({ project }: { project: Project }) {
                         className="absolute inset-0 bg-cover bg-center blur-sm opacity-30"
                         style={{ backgroundImage: "url('/brochure.webp')" }}
                       />
-                      <div className="relative flex items-center gap-3">
-                        <Download className="w-6 h-6 text-white flex-shrink-0" />
-                        <div className="text-left text-white">
+                      <div className="relative flex items-center gap-3 w-full  justify-center flex-col">
+                        {brochuresUnlocked ? (
+                          <Download className="w-10 h-10 text-white flex-shrink-0" />
+                        ) : (
+                          <Lock className="w-10 h-10 text-white flex-shrink-0" />
+                        )}
+                        <div className="text-center text-white">
                           <p className="font-semibold">
                             Project Brochure {index + 1}
                           </p>
                           <p className="text-sm text-gray-200">
                             {brochuresUnlocked
-                              ? "PDF Download"
+                              ? "Download PDF"
                               : "Click to unlock & download"}
                           </p>
                         </div>
@@ -388,6 +383,8 @@ function ProjectDetailContent({ project }: { project: Project }) {
           </Button>
         </div>
       )}
+
+      { project.name === "Furde Heights" ? <MahaRera/> : <></>}
 
       <LoanCalculator />
       <BanksMarquee />
