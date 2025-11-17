@@ -35,15 +35,11 @@ export async function POST(request: NextRequest) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
-      // Determine resource type based on file extension
-      const isPDF = file.name.toLowerCase().endsWith('.pdf');
-      const resourceType = isPDF ? "raw" : "auto";
-
       return new Promise((resolve, reject) => {
         cloudinary.uploader.upload_stream(
           {
             folder: folder,
-            resource_type: resourceType,
+            resource_type: "auto", // Automatically detect file type (image, video, pdf, etc.)
           },
           (error, result) => {
             if (error) {

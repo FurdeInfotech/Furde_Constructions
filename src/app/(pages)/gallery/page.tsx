@@ -61,7 +61,7 @@ function Page() {
            eventsRes
           ] = await Promise.all([
           fetch("/api/projects"),
-          fetch("/api/awards"),
+          // fetch("/api/awards"),
           fetch("/api/events"),
         ]);
 
