@@ -56,16 +56,20 @@ function Page() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [projectsRes, awardsRes, eventsRes] = await Promise.all([
+        const [projectsRes, awardsRes,
+          //  eventsRes
+          ] = await Promise.all([
           fetch("/api/projects"),
-          fetch("/api/awards"),
+          // fetch("/api/awards"),
           fetch("/api/events"),
         ]);
 
-        const [projectsData, awardsData, eventsData] = await Promise.all([
+        const [projectsData, awardsData, 
+          // eventsData
+        ] = await Promise.all([
           projectsRes.json(),
           awardsRes.json(),
-          eventsRes.json(),
+          // eventsRes.json(),
         ]);
 
         if (projectsData?.success) {
@@ -74,9 +78,9 @@ function Page() {
         if (awardsData?.success) {
           setAwards(awardsData.data || []);
         }
-        if (eventsData?.success) {
-          setEvents(eventsData.data || []);
-        }
+        // if (eventsData?.success) {
+        //   setEvents(eventsData.data || []);
+        // }
       } catch (error) {
         console.error("Error fetching gallery data:", error);
         setProjects([]);
@@ -130,7 +134,7 @@ function Page() {
         >
           {[
             { id: "projects", label: "Projects" },
-            { id: "awards", label: "Awards" },
+            // { id: "awards", label: "Awards" },
             { id: "events", label: "Events" },
           ].map((tab) => (
             <motion.div
@@ -183,7 +187,9 @@ function Page() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button
+                {
+                  project.name === "Amar Park" ? <>
+                  </> :  <Button
                   onClick={() => setFilter(project.name)}
                   variant={filter === project.name ? "default" : "outline"}
                   className={`transition-all duration-300 px-6 py-2 rounded-full ${
@@ -194,6 +200,8 @@ function Page() {
                 >
                   {project.name}
                 </Button>
+                }
+               
               </motion.div>
             ))}
           </motion.div>

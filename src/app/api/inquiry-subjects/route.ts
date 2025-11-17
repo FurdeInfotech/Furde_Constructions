@@ -7,7 +7,7 @@ import { getToken } from "next-auth/jwt";
 export async function GET() {
   try {
     await dbConnect();
-    const subjects = await InquirySubjectModel.find({}).sort({ createdAt: -1 });
+    const subjects = await InquirySubjectModel.find({}).sort({ createdAt: 1 });
     return NextResponse.json({ success: true, data: subjects });
   } catch (error) {
     console.error("Error fetching inquiry subjects:", error);

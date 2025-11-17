@@ -253,10 +253,16 @@ function ContactUsForm({ mode = "default", onSuccess }: ContactUsFormProps) {
 
           <div className=" flex md:flex-row flex-col justify-between md:items-center md:gap-0 gap-5">
             <p className="secondary-text md:text-xl text-base">
-              {mode === "brochure"
-                ? "Submit the form once to unlock all brochure downloads. Required fields are marked *."
-                : "We're excited to connect with you! <br />Required fields are marked *"}
+              {mode === "brochure" ? (
+                "Submit the form once to unlock all brochure downloads. Required fields are marked *."
+              ) : (
+                <>
+                  We're excited to connect with you! <br />
+                  Required fields are marked *
+                </>
+              )}
             </p>
+
             <div className=" flex md:justify-normal justify-end">
               <EnhancedAnimatedButton
                 type="submit"

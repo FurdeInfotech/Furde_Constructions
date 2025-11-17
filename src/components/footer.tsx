@@ -26,11 +26,11 @@ function Footer() {
     },
   ];
 
-    const pathname = usePathname();
-  
-    if (pathname.startsWith("/dashboard") || pathname.startsWith("/employees")) {
-      return <div></div>;
-    }
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/dashboard") || pathname.startsWith("/employees")) {
+    return <div></div>;
+  }
 
   const year = new Date().getFullYear();
   return (
@@ -87,14 +87,25 @@ function Footer() {
               </div>
 
               <div className="py-2 px-5 grid grid-cols-1 font-semibold heading md:space-y-0 space-y-4">
-                <Link
-                  href={"tel:+919850326555"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex body gap-2 md:text-xl text-neutral-700 hover:text-black"
-                >
-                  <Phone className=" mt-0.5" /> +91-9850326555
-                </Link>
+                <div className=" md:flex-row flex flex-col md:gap-4 gap-7">
+                  <Link
+                    href={"tel:+919850326555"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex body gap-2 md:text-xl text-neutral-700 hover:text-black"
+                  >
+                    <Phone className=" mt-0.5" /> +91-9850326555
+                  </Link>
+                  <Link
+                    href={"tel:+919028038555"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex body gap-2 md:text-xl text-neutral-700 hover:text-black"
+                  >
+                    <Phone className=" mt-0.5" /> +91-9028038555
+                  </Link>
+                </div>
+
                 <Link
                   href={"mailto:furdeconstructions@gmail.com"}
                   target="_blank"

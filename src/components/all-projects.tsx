@@ -61,7 +61,7 @@ export default function AllProjects() {
       )}
 
       {/* Project Statistics */}
-      {!loading && hasProjects && (
+      {/* {!loading && hasProjects && (
         <div className="py-16 bg-gray-50 rounded-2xl mt-16">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-3xl font-bold text-center mb-12">
@@ -89,7 +89,7 @@ export default function AllProjects() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

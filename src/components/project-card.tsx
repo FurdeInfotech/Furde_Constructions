@@ -55,11 +55,11 @@ export default function ProjectCard({
         </div>
         
         <div className="absolute md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:left-auto md:right-16 md:translate-x-0 bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl p-6 md:shadow-2xl shadow:lg md:min-w-md md:max-w-md min-w-xs max-w-fit">
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <Badge variant={project.status === "ongoing" ? "onGoing" : project.status === "completed" ? "completed" : "default"}>
               {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
             </Badge>
-          </div>
+          </div> */}
 
           <h2 className="md:text-2xl text-lg font-semibold heading mb-3 line-clamp-2">
             {project.name}
