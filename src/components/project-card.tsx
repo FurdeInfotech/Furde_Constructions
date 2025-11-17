@@ -70,9 +70,11 @@ export default function ProjectCard({
               className="w-6 h-6 mr-2 text-[#CA6F1E] flex-shrink-0 mt-0.5"
               strokeWidth={2.5}
             />
+            <Link href={project.googleMapLink!} target="_blank">
             <span className="md:text-lg text-sm secondary-text line-clamp-2">
               {project.address}
             </span>
+            </Link>
           </div>
           
           {project.types && (
