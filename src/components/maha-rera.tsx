@@ -18,7 +18,7 @@ function MahaRera() {
         </div>
 
         <img
-          src={`/FH_rera.png`}
+          src={`/FHrera.png`}
           alt={`Furde Heights Rera`}
           className="w-full h-full object-contain rounded-2xl aspect-[4/3]"
         />
