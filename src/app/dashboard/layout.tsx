@@ -66,7 +66,7 @@ export default function DashboardLayout({
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-700">
-                Welcome, {session.admin?.email}
+                Welcome Admin
               </span>
             </div>
           </div>

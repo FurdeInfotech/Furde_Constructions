@@ -2,7 +2,14 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Menu, Images, FolderOpen, LogOut, ListChecks } from "lucide-react";
+import {
+  Menu,
+  Images,
+  FolderOpen,
+  LogOut,
+  ListChecks,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 
@@ -26,6 +33,11 @@ export function Sidebar({ className, ...props }: SidebarProps) {
       title: "Inquiry Subjects",
       href: "/dashboard/inquiry-subjects",
       icon: ListChecks,
+    },
+    {
+      title: "Profile",
+      href: "/dashboard/profile",
+      icon: User,
     },
   ];
 

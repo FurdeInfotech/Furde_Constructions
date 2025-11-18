@@ -24,6 +24,17 @@ export default function ContactEmailTemplate({
   phone,
   inquiry,
 }: ContactEmailTemplateProps) {
+
+  const date = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short'
+  });
+
   return (
     <Html>
       <Head />
@@ -67,6 +78,11 @@ export default function ContactEmailTemplate({
             <Section style={infoRowStyle}>
               <Text style={labelStyle}>INQUIRY ABOUT</Text>
               <Text style={valueStyle}>{inquiry}</Text>
+            </Section>
+
+             <Section style={infoRowStyle}>
+              <Text style={labelStyle}>Date</Text>
+              <Text style={valueStyle}>{date}</Text>
             </Section>
             
             <Hr style={dividerStyle} />
